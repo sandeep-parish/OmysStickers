@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@android:color/white"
+    app:contentPadding="10dp"
+    app:cardElevation="5dp">
+
+    <RelativeLayout
+        android:id="@+id/sticker_store_row_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/packInfoView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/sticker_pack_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/sticker_pack_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    tools:text="Funny Stickers" />
+
+                <TextView
+                    android:id="@+id/sticker_pack_publisher"
+                    style="@style/sticker_packs_list_item_author_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:alpha="0.4"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/black"
+                    tools:text="Sandeep Parish - 16 Stickers" />
+
+                <!--TextView
+                    android:id="@+id/sticker_pack_list_item_dot"
+                    style="@style/sticker_packs_list_item_author_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingEnd="@dimen/sticker_pack_list_item_row_dot_horizontal_padding"
+                    android:paddingLeft="@dimen/sticker_pack_list_item_row_dot_horizontal_padding"
+                    android:paddingRight="@dimen/sticker_pack_list_item_row_dot_horizontal_padding"
+                    android:paddingStart="@dimen/sticker_pack_list_item_row_dot_horizontal_padding"
+                    android:text="@string/dot" /-->
+
+
+                <!--TextView
+                    android:id="@+id/sticker_pack_filesize"
+                    style="@style/sticker_packs_list_item_author_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    tools:text="700kb" /-->
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/add_button_on_list"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="5dp"
+                    android:scaleType="center"
+                    android:src="@drawable/icon_add_circle"
+                    app:tint="@color/colorAccent" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/sticker_packs_list_item_image_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_below="@+id/packInfoView"
+            android:orientation="horizontal" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
