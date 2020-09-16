@@ -1,7 +1,10 @@
 package com.omys.stickermaker.utils
 
+import android.content.Context
 import android.graphics.*
 import android.media.ExifInterface
+import android.net.Uri
+import android.webkit.MimeTypeMap
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -111,6 +114,13 @@ private fun getRotationMatrix(exitInterface: ExifInterface): Matrix? {
     return matrix
 }
 
+
+fun Context.getFileExtensionFromUri(uri: Uri): String? {
+    val extension: String
+    val mimeTypeMap = MimeTypeMap.getSingleton()
+    extension = mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri)).toString()
+    return ".$extension"
+}
 
 fun String?.deleteOriginalFile() {
     if (this.isNullOrEmpty()) return

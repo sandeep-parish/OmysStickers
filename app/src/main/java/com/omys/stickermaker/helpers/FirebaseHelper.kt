@@ -7,12 +7,9 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.omys.stickermaker.modal.StickerPack
-import com.omys.stickermaker.utils.CustomDialogView
-import com.omys.stickermaker.utils.DIR_STICKERS
-import com.omys.stickermaker.utils.KEY_STICKER_PACK
-import com.omys.stickermaker.utils.debugPrint
+import com.omys.stickermaker.utils.*
 
-class FirebaseHelper(activity: Activity?) {
+class FirebaseHelper(private val activity: Activity?) {
 
     var progressDialog: CustomDialogView? = null
     var storageRef: StorageReference? = null
@@ -44,7 +41,8 @@ class FirebaseHelper(activity: Activity?) {
     fun uploadFile(fileUri: Uri?, identifier: String, callback: OnUploadCallback? = null, directoryName: String = DIR_STICKERS) {
         fileUri ?: return
         progressDialog?.show()
-        val fileName = "OMYS_IMG${System.currentTimeMillis()}.png"
+        val fileExtension = activity?.getFileExtensionFromUri(uri = fileUri)
+        val fileName = "OMYS_IMG${System.currentTimeMillis()}$fileExtension"
         val fileReference = storageRef?.child("$directoryName$fileName")
         val uploadTask = fileReference?.putFile(fileUri)
 
