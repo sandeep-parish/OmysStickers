@@ -135,8 +135,8 @@ public class StickerContentProvider extends ContentProvider {
             ParcelFileDescriptor pfd = null;
             try {
                 if (filename.equals("trayimage") && csp.getTrayImageUri() != null) {
-                    pfd = Objects.requireNonNull(getContext()).getContentResolver().openFileDescriptor(
-                            csp.getTrayImageUri(), "r");
+                  /*  pfd = Objects.requireNonNull(getContext()).getContentResolver().openFileDescriptor(
+                            csp.getTrayImageUri(), "r");*/
                     Log.w("ASSETFILE ACTUAL URI", String.valueOf(csp.getTrayImageUri()) + "");
 
                 } else {

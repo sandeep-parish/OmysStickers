@@ -30,7 +30,7 @@ public class WhitelistCheck {
     private static String QUERY_PATH = "is_whitelisted";
     private static String QUERY_RESULT_COLUMN_NAME = "result";
 
-    static boolean isWhitelisted(@NonNull Context context, @NonNull String identifier) {
+    public static boolean isWhitelisted(@NonNull Context context, @NonNull String identifier) {
         try {
             boolean consumerResult = isWhitelistedFromProvider(context, identifier, CONSUMER_WHATSAPP_PACKAGE_NAME);
             boolean smbResult = isWhitelistedFromProvider(context, identifier, SMB_WHATSAPP_PACKAGE_NAME);

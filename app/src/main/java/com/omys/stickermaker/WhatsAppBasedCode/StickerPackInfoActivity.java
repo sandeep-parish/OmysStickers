@@ -33,10 +33,10 @@ public class StickerPackInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sticker_pack_info);
 
-        final String trayIconUriString = getIntent().getStringExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_TRAY_ICON);
-        final String website = getIntent().getStringExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_WEBSITE);
-        final String email = getIntent().getStringExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_EMAIL);
-        final String privacyPolicy = getIntent().getStringExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_PRIVACY_POLICY);
+        final String trayIconUriString = getIntent().getStringExtra(StickerPackDetailsActivityOld.EXTRA_STICKER_PACK_TRAY_ICON);
+        final String website = getIntent().getStringExtra(StickerPackDetailsActivityOld.EXTRA_STICKER_PACK_WEBSITE);
+        final String email = getIntent().getStringExtra(StickerPackDetailsActivityOld.EXTRA_STICKER_PACK_EMAIL);
+        final String privacyPolicy = getIntent().getStringExtra(StickerPackDetailsActivityOld.EXTRA_STICKER_PACK_PRIVACY_POLICY);
 
         final TextView trayIcon = findViewById(R.id.tray_icon);
         try {

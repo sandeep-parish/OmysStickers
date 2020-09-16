@@ -19,12 +19,12 @@ import com.omys.stickermaker.R;
 
 public class StickerPackListItemViewHolder extends RecyclerView.ViewHolder {
 
-    View container;
-    TextView titleView;
-    TextView publisherView;
+    public View container;
+    public TextView titleView;
+    public TextView publisherView;
     //TextView filesizeView;
-    ImageView addButton;
-    LinearLayout imageRowView;
+    public ImageView addButton;
+    public LinearLayout imageRowView;
 
     StickerPackListItemViewHolder(final View itemView) {
         super(itemView);

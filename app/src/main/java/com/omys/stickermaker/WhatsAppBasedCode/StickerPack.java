@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StickerPack implements Parcelable {
-    Uri trayImageUri;
-    String identifier;
-    String name;
+    String trayImageUri;
+    public String identifier;
+    public String name;
     String publisher;
     String trayImageFile;
     final String publisherEmail;
@@ -37,25 +37,12 @@ public class StickerPack implements Parcelable {
     private boolean isWhitelisted;
     private int stickersAddedIndex = 0;
 
-    /*public StickerPack(String identifier, String name, String publisher, String trayImageFile, String publisherEmail, String publisherWebsite, String privacyPolicyWebsite, String licenseAgreementWebsite) {
-        this.identifier = identifier;
-        this.name = name;
-        this.publisher = publisher;
-        this.trayImageFile = trayImageFile;
-        this.trayImageUri = Uri.parse("");
-        this.publisherEmail = publisherEmail;
-        this.publisherWebsite = publisherWebsite;
-        this.privacyPolicyWebsite = privacyPolicyWebsite;
-        this.licenseAgreementWebsite = licenseAgreementWebsite;
-        this.stickers = new ArrayList<>();
-    }*/
-
-    public StickerPack(String identifier, String name, String publisher, Uri trayImageUri, String publisherEmail, String publisherWebsite, String privacyPolicyWebsite, String licenseAgreementWebsite, Context context) {
+    public StickerPack(String identifier, String name, String publisher, String trayImageUri, String publisherEmail, String publisherWebsite, String privacyPolicyWebsite, String licenseAgreementWebsite, Context context) {
         this.identifier = identifier;
         this.name = name;
         this.publisher = publisher;
         this.trayImageFile = "trayimage";
-        this.trayImageUri = ImageManipulation.convertIconTrayToWebP(trayImageUri, this.identifier, "trayImage", context);
+        this.trayImageUri = trayImageUri;
         this.publisherEmail = publisherEmail;
         this.publisherWebsite = publisherWebsite;
         this.privacyPolicyWebsite = privacyPolicyWebsite;
@@ -63,11 +50,11 @@ public class StickerPack implements Parcelable {
         this.stickers = new ArrayList<>();
     }
 
-    void setIsWhitelisted(boolean isWhitelisted) {
+    public void setIsWhitelisted(boolean isWhitelisted) {
         this.isWhitelisted = isWhitelisted;
     }
 
-    boolean getIsWhitelisted() {
+    public boolean getIsWhitelisted() {
         return isWhitelisted;
     }
 
@@ -99,7 +86,7 @@ public class StickerPack implements Parcelable {
         }
     };
 
-    public void addSticker(Uri uri, Context context){
+    public void addSticker(Uri uri, Context context) {
         String index = String.valueOf(stickersAddedIndex);
         this.stickers.add(new Sticker(
                 index,
@@ -108,18 +95,18 @@ public class StickerPack implements Parcelable {
         stickersAddedIndex++;
     }
 
-    public void deleteSticker(Sticker sticker){
+    public void deleteSticker(Sticker sticker) {
         new File(sticker.getUri().getPath()).delete();
         this.stickers.remove(sticker);
     }
 
-    public Sticker getSticker(int index){
+    public Sticker getSticker(int index) {
         return this.stickers.get(index);
     }
 
-    public Sticker getStickerById(int index){
-        for(Sticker s : this.stickers){
-            if(s.getImageFileName().equals(String.valueOf(index))){
+    public Sticker getStickerById(int index) {
+        for (Sticker s : this.stickers) {
+            if (s.getImageFileName().equals(String.valueOf(index))) {
                 return s;
             }
         }
@@ -180,7 +167,7 @@ public class StickerPack implements Parcelable {
         this.identifier = identifier;
     }
 
-    public Uri getTrayImageUri() {
+    public String getTrayImageUri() {
         return trayImageUri;
     }
 }

@@ -4,14 +4,12 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,32 +22,30 @@ import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
 
 public class NewUserIntroActivity extends IntroActivity {
 
-    @Override protected void onCreate(Bundle savedInstanceState){
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setButtonBackVisible(false);
         addSlide(new SimpleSlide.Builder()
-                .title("Welcome to StickerMaker for WhatsApp!")
+                .title("Welcome to Omys StickerMaker for WhatsApp!")
                 .description("The perfect solution for making and sharing your own WhatsApp sticker packs!")
-                .image(R.drawable.stickermakerlogo)
+                .image(R.drawable.app_logo)
                 .background(R.color.colorAccent)
                 .scrollable(false)
                 .build());
 
-        if(!checkIfBatteryOptimizationIgnored() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if (!checkIfBatteryOptimizationIgnored() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             addSlide(new SimpleSlide.Builder()
                     .title("We've recognized our app is optimized by Android's Doze system.")
                     .description("In order for the app to work correctly, please disable the optimization for \"StickerMaker\" after clicking the button.")
                     .background(R.color.colorAccent)
                     .scrollable(false)
                     .buttonCtaLabel("Let's Go")
-                    .buttonCtaClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent();
-                            intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
-                            startActivityForResult(intent, 4113);
-                        }
+                    .buttonCtaClickListener(view -> {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+                        startActivityForResult(intent, 4113);
                     })
                     .build());
         }
@@ -63,12 +59,7 @@ public class NewUserIntroActivity extends IntroActivity {
                     .background(R.color.colorAccent)
                     .scrollable(false)
                     .buttonCtaLabel("Grant Permissions")
-                    .buttonCtaClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            verifyStoragePermissions(NewUserIntroActivity.this);
-                        }
-                    })
+                    .buttonCtaClickListener(view -> verifyStoragePermissions(NewUserIntroActivity.this))
                     .build());
         }
 
@@ -90,13 +81,11 @@ public class NewUserIntroActivity extends IntroActivity {
 
             @Override
             public void onPageSelected(int i) {
-                if(i>0 && i!=getSlides().size()-1){
+                if (i > 0 && i != getSlides().size() - 1) {
                     setNavigation(false, true);
                 } else {
                     setNavigation(true, false);
                 }
-
-
             }
 
             @Override
@@ -111,15 +100,15 @@ public class NewUserIntroActivity extends IntroActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 4113){
-            if(checkIfBatteryOptimizationIgnored()){
+        if (requestCode == 4113) {
+            if (checkIfBatteryOptimizationIgnored()) {
                 setNavigation(true, false);
                 nextSlide();
             }
         }
     }
 
-    private boolean checkIfBatteryOptimizationIgnored(){
+    private boolean checkIfBatteryOptimizationIgnored() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String packageName = getPackageName();
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -130,7 +119,7 @@ public class NewUserIntroActivity extends IntroActivity {
     }
 
 
-    private void setNavigation(boolean forward, boolean backward){
+    private void setNavigation(boolean forward, boolean backward) {
         setNavigationPolicy(new NavigationPolicy() {
             @Override
             public boolean canGoForward(int i) {
@@ -168,12 +157,7 @@ public class NewUserIntroActivity extends IntroActivity {
             case 1:
                 if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     AlertDialog alertDialog = new AlertDialog.Builder(this)
-                            .setPositiveButton("Let's Go", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    verifyStoragePermissions(NewUserIntroActivity.this);
-                                }
-                            })
+                            .setPositiveButton("Let's Go", (dialogInterface, i) -> verifyStoragePermissions(NewUserIntroActivity.this))
                             .create();
                     alertDialog.setTitle("Notice!");
                     alertDialog.setMessage("Allowing storage permissions is crucial for the app to work. Please grant the permissions.");

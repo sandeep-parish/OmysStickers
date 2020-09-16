@@ -22,6 +22,11 @@
     <string name="info_screen_tray_icon">Tray icon</string>
     <string name="details_pack_already_added">Sticker pack added to WhatsApp</string>
     <string name="test_device">00C4003037A3F623DA3CC00DE9B803BB</string>
+    <string name="pack_name">Pack Name</string>
+    <string name="createdBy">Created By</string>
+    <string name="stickerMaxLimit">Only 30 stickers allowed in a  sticker pack</string>
+    <string name="publish">Publish</string>
+    <string name="minStickerLimit">In order to be applied to WhatsApp, the sticker pack must have at least 3 stickers. Please add more stickers first.</string>
 
     <!-- Admob data -->
     <!--
@@ -33,7 +38,7 @@
 
     <!--Test Data-->
 
-  <!--  <string name="admob_ad_id">ca-app-pub-3940256099942544~3347511713</string>
+    <!--  <string name="admob_ad_id">ca-app-pub-3940256099942544~3347511713</string>
     <string name="admob_banner_main_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="admob_banner_packview_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="admob_fullscreen_adding_pack_unit_id">ca-app-pub-3940256099942544/1033173712</string>-->

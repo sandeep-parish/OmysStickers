@@ -32,7 +32,7 @@ public class StickerPackListAdapter extends RecyclerView.Adapter<StickerPackList
     private final OnAddButtonClickedListener onAddButtonClickedListener;
     private int maxNumberOfStickersInARow;
 
-    StickerPackListAdapter(@NonNull List<StickerPack> stickerPacks, @NonNull OnAddButtonClickedListener onAddButtonClickedListener) {
+    public StickerPackListAdapter(@NonNull List<StickerPack> stickerPacks, @NonNull OnAddButtonClickedListener onAddButtonClickedListener) {
         this.stickerPacks = stickerPacks;
         this.onAddButtonClickedListener = onAddButtonClickedListener;
     }
@@ -55,9 +55,9 @@ public class StickerPackListAdapter extends RecyclerView.Adapter<StickerPackList
 
         viewHolder.titleView.setText(pack.name);
         viewHolder.container.setOnClickListener(view -> {
-            Intent intent = new Intent(view.getContext(), StickerPackDetailsActivity.class);
-            intent.putExtra(StickerPackDetailsActivity.EXTRA_SHOW_UP_BUTTON, true);
-            intent.putExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_DATA, pack.identifier);
+            Intent intent = new Intent(view.getContext(), StickerPackDetailsActivityOld.class);
+            intent.putExtra(StickerPackDetailsActivityOld.EXTRA_SHOW_UP_BUTTON, true);
+            intent.putExtra(StickerPackDetailsActivityOld.EXTRA_STICKER_PACK_DATA, pack.identifier);
             view.getContext().startActivity(intent);
         });
         viewHolder.imageRowView.removeAllViews();
@@ -74,6 +74,8 @@ public class StickerPackListAdapter extends RecyclerView.Adapter<StickerPackList
             }
             viewHolder.imageRowView.addView(rowImage);
         }
+        boolean isWhiteListed = WhitelistCheck.isWhitelisted(context, pack.identifier);
+        pack.setIsWhitelisted(isWhiteListed);
         setAddButtonAppearance(viewHolder.addButton, pack);
 
        /* viewHolder.shareButton.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +106,7 @@ public class StickerPackListAdapter extends RecyclerView.Adapter<StickerPackList
         return stickerPacks.size();
     }
 
-    void setMaxNumberOfStickersInARow(int maxNumberOfStickersInARow) {
+    public void setMaxNumberOfStickersInARow(int maxNumberOfStickersInARow) {
         if (this.maxNumberOfStickersInARow != maxNumberOfStickersInARow) {
             this.maxNumberOfStickersInARow = maxNumberOfStickersInARow;
             notifyDataSetChanged();

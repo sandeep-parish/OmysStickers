@@ -40,7 +40,7 @@ import com.omys.stickermaker.StickerBook;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 
-public class StickerPackDetailsActivity extends BaseActivity {
+public class StickerPackDetailsActivityOld extends BaseActivity {
 
     /**
      * Do not change below values of below 3 lines as this is also used by WhatsApp
@@ -60,7 +60,7 @@ public class StickerPackDetailsActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
-    private StickerPreviewAdapter stickerPreviewAdapter;
+    public StickerPreviewAdapter stickerPreviewAdapter;
     private int numColumns;
     private View addButton;
     private View alreadyAddedText;
@@ -116,7 +116,7 @@ public class StickerPackDetailsActivity extends BaseActivity {
         }
         packNameTextView.setText(stickerPack.name);
         packPublisherTextView.setText(stickerPack.publisher);
-        packTrayIcon.setImageURI(stickerPack.getTrayImageUri());
+        // packTrayIcon.setImageURI(stickerPack.getTrayImageUri());
         findViewById(R.id.add_sticker_to_pack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,9 +128,9 @@ public class StickerPackDetailsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (stickerPack.getStickers().size() >= 3) {
-                    StickerPackDetailsActivity.this.addStickerPackToWhatsApp(stickerPack);
+                    StickerPackDetailsActivityOld.this.addStickerPackToWhatsApp(stickerPack);
                 } else {
-                    AlertDialog alertDialog = new AlertDialog.Builder(StickerPackDetailsActivity.this)
+                    AlertDialog alertDialog = new AlertDialog.Builder(StickerPackDetailsActivityOld.this)
                             .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -147,14 +147,14 @@ public class StickerPackDetailsActivity extends BaseActivity {
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataArchiver.createZipFileFromStickerPack(stickerPack, StickerPackDetailsActivity.this);
+                DataArchiver.createZipFileFromStickerPack(stickerPack, StickerPackDetailsActivityOld.this);
             }
         });
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog alertDialog = new AlertDialog.Builder(StickerPackDetailsActivity.this)
+                AlertDialog alertDialog = new AlertDialog.Builder(StickerPackDetailsActivityOld.this)
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -167,10 +167,10 @@ public class StickerPackDetailsActivity extends BaseActivity {
                                 dialogInterface.dismiss();
                                 StickerBook.deleteStickerPackById(stickerPack.getIdentifier());
                                 finish();
-                                Intent intent = new Intent(StickerPackDetailsActivity.this, StickerPackListActivity.class);
+                                Intent intent = new Intent(StickerPackDetailsActivityOld.this, StickerPackListActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
-                                Toast.makeText(StickerPackDetailsActivity.this, "Sticker Pack deleted", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(StickerPackDetailsActivityOld.this, "Sticker Pack deleted", Toast.LENGTH_SHORT).show();
                             }
                         }).create();
                 alertDialog.setTitle("Are you sure?");
@@ -185,12 +185,12 @@ public class StickerPackDetailsActivity extends BaseActivity {
     }
 
     private void launchInfoActivity(String publisherWebsite, String publisherEmail, String privacyPolicyWebsite, String trayIconUriString) {
-        Intent intent = new Intent(StickerPackDetailsActivity.this, StickerPackInfoActivity.class);
-        intent.putExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_ID, stickerPack.identifier);
-        intent.putExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_WEBSITE, publisherWebsite);
-        intent.putExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_EMAIL, publisherEmail);
-        intent.putExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_PRIVACY_POLICY, privacyPolicyWebsite);
-        intent.putExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_TRAY_ICON, stickerPack.getTrayImageUri().toString());
+        Intent intent = new Intent(StickerPackDetailsActivityOld.this, StickerPackInfoActivity.class);
+        intent.putExtra(StickerPackDetailsActivityOld.EXTRA_STICKER_PACK_ID, stickerPack.identifier);
+        intent.putExtra(StickerPackDetailsActivityOld.EXTRA_STICKER_PACK_WEBSITE, publisherWebsite);
+        intent.putExtra(StickerPackDetailsActivityOld.EXTRA_STICKER_PACK_EMAIL, publisherEmail);
+        intent.putExtra(StickerPackDetailsActivityOld.EXTRA_STICKER_PACK_PRIVACY_POLICY, privacyPolicyWebsite);
+        intent.putExtra(StickerPackDetailsActivityOld.EXTRA_STICKER_PACK_TRAY_ICON, stickerPack.getTrayImageUri().toString());
         startActivity(intent);
     }
 
@@ -218,8 +218,8 @@ public class StickerPackDetailsActivity extends BaseActivity {
             final String publisherWebsite = stickerPack.publisherWebsite;
             final String publisherEmail = stickerPack.publisherEmail;
             final String privacyPolicyWebsite = stickerPack.privacyPolicyWebsite;
-            Uri trayIconUri = stickerPack.getTrayImageUri();
-            launchInfoActivity(publisherWebsite, publisherEmail, privacyPolicyWebsite, trayIconUri.toString());
+            //  Uri trayIconUri = stickerPack.getTrayImageUri();
+            //      launchInfoActivity(publisherWebsite, publisherEmail, privacyPolicyWebsite, trayIconUri.toString());
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -345,28 +345,28 @@ public class StickerPackDetailsActivity extends BaseActivity {
     }
 
     static class WhiteListCheckAsyncTask extends AsyncTask<StickerPack, Void, Boolean> {
-        private final WeakReference<StickerPackDetailsActivity> stickerPackDetailsActivityWeakReference;
+        private final WeakReference<StickerPackDetailsActivityOld> stickerPackDetailsActivityWeakReference;
 
-        WhiteListCheckAsyncTask(StickerPackDetailsActivity stickerPackListActivity) {
+        WhiteListCheckAsyncTask(StickerPackDetailsActivityOld stickerPackListActivity) {
             this.stickerPackDetailsActivityWeakReference = new WeakReference<>(stickerPackListActivity);
         }
 
         @Override
         protected final Boolean doInBackground(StickerPack... stickerPacks) {
             StickerPack stickerPack = stickerPacks[0];
-            final StickerPackDetailsActivity stickerPackDetailsActivity = stickerPackDetailsActivityWeakReference.get();
+            final StickerPackDetailsActivityOld stickerPackDetailsActivityOld = stickerPackDetailsActivityWeakReference.get();
             //noinspection SimplifiableIfStatement
-            if (stickerPackDetailsActivity == null) {
+            if (stickerPackDetailsActivityOld == null) {
                 return false;
             }
-            return WhitelistCheck.isWhitelisted(stickerPackDetailsActivity, stickerPack.identifier);
+            return WhitelistCheck.isWhitelisted(stickerPackDetailsActivityOld, stickerPack.identifier);
         }
 
         @Override
         protected void onPostExecute(Boolean isWhitelisted) {
-            final StickerPackDetailsActivity stickerPackDetailsActivity = stickerPackDetailsActivityWeakReference.get();
-            if (stickerPackDetailsActivity != null) {
-                stickerPackDetailsActivity.updateAddUI(isWhitelisted);
+            final StickerPackDetailsActivityOld stickerPackDetailsActivityOld = stickerPackDetailsActivityWeakReference.get();
+            if (stickerPackDetailsActivityOld != null) {
+                stickerPackDetailsActivityOld.updateAddUI(isWhitelisted);
             }
         }
     }

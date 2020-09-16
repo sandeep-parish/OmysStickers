@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "404374990962",
+    "firebase_url": "https://omys-stickers.firebaseio.com",
+    "project_id": "omys-stickers",
+    "storage_bucket": "omys-stickers.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404374990962:android:0160aca1b36a51472852eb",
+        "android_client_info": {
+          "package_name": "com.omys.stickermaker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "404374990962-q4f3f8324v3retfhod7m0qlfkvsgp2qf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.omys.stickermaker",
+            "certificate_hash": "04bf9443fe363b634c576598cf52d0d2be3ade80"
+          }
+        },
+        {
+          "client_id": "404374990962-eahcuko65618oap3739po8fj89k984mb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACcFjbEyJoEpqzLKwH2sHgaMVR2jUAA68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "404374990962-eahcuko65618oap3739po8fj89k984mb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

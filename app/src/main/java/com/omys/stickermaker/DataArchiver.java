@@ -44,8 +44,7 @@ public class DataArchiver {
 
     private static int BUFFER = 8192;
 
-    public static boolean writeStickerBookJSON(List<StickerPack> sb, Context context)
-    {
+    public static boolean writeStickerBookJSON(List<StickerPack> sb, Context context) {
         try {
             SharedPreferences mSettings = context.getSharedPreferences("StickerMaker", Context.MODE_PRIVATE);
 
@@ -53,34 +52,33 @@ public class DataArchiver {
                     .registerTypeAdapter(Uri.class, new UriSerializer())
                     .create()
                     .toJson(
-                    sb,
-                    new TypeToken<ArrayList<StickerPack>>() {}.getType());
+                            sb,
+                            new TypeToken<ArrayList<StickerPack>>() {
+                            }.getType());
             SharedPreferences.Editor mEditor = mSettings.edit();
             mEditor.putString("stickerbook", writeValue);
             mEditor.apply();
             return true;
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             return false;
         }
     }
 
-    public static ArrayList<StickerPack> readStickerPackJSON(Context context)
-    {
+    public static ArrayList<StickerPack> readStickerPackJSON(Context context) {
         SharedPreferences mSettings = context.getSharedPreferences("StickerMaker", Context.MODE_PRIVATE);
 
         String loadValue = mSettings.getString("stickerbook", "");
-        Type listType = new TypeToken<ArrayList<StickerPack>>(){}.getType();
+        Type listType = new TypeToken<ArrayList<StickerPack>>() {
+        }.getType();
         return new GsonBuilder()
                 .registerTypeAdapter(Uri.class, new UriDeserializer())
                 .create()
                 .fromJson(loadValue, listType);
     }
 
-    public static String createZipFileFromStickerPack(StickerPack sp, Context context){
+    public static String createZipFileFromStickerPack(StickerPack sp, Context context) {
         String id = sp.getIdentifier();
-        String path = context.getFilesDir()+"/"+id;
+        String path = context.getFilesDir() + "/" + id;
 
         createZip cz = new createZip(context, sp);
         cz.execute();
@@ -88,10 +86,10 @@ public class DataArchiver {
         return path + "/" + sp.getIdentifier() + ".zip";
     }
 
-    public static void importZipFileToStickerPack(Uri uri, Context context){
+    public static void importZipFileToStickerPack(Uri uri, Context context) {
         String zipPath = "";
         try {
-            zipPath = FilesUtils.inputStreamToSavedFile(context.getContentResolver().openInputStream(uri), context, UUID.randomUUID().toString()+".zip");
+            zipPath = FilesUtils.inputStreamToSavedFile(context.getContentResolver().openInputStream(uri), context, UUID.randomUUID().toString() + ".zip");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -177,11 +175,10 @@ public class DataArchiver {
                             sp,
                             StickerPack.class);
 
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(new File(path, sp.getIdentifier()+".json")));
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(new File(path, sp.getIdentifier() + ".json")));
             outputStreamWriter.write(writeValue);
             outputStreamWriter.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
     }
@@ -192,24 +189,23 @@ public class DataArchiver {
 
         try {
 
-            InputStream inputStream = new FileInputStream(new File(path, id+".json"));
+            InputStream inputStream = new FileInputStream(new File(path, id + ".json"));
 
 
-            if ( inputStream != null ) {
+            if (inputStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 String receiveString = "";
                 StringBuilder stringBuilder = new StringBuilder();
 
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                while ((receiveString = bufferedReader.readLine()) != null) {
                     stringBuilder.append(receiveString);
                 }
 
                 inputStream.close();
                 ret = stringBuilder.toString();
             }
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             Log.e("login activity", "File not found: " + e.toString());
         } catch (IOException e) {
             Log.e("login activity", "Can not read file: " + e.toString());
@@ -257,7 +253,7 @@ public class DataArchiver {
                 dialog.dismiss();
             }
             String id = sp.getIdentifier();
-            String path = dialog.getContext().getFilesDir()+"/"+id;
+            String path = dialog.getContext().getFilesDir() + "/" + id;
             ExternalPacksManager.sendStickerPackZipThroughWhatsApp(dialog.getContext(), id);
         }
 
@@ -265,15 +261,15 @@ public class DataArchiver {
         protected Void doInBackground(Void... params) {
             String id = sp.getIdentifier();
             ArrayList<String> namesOfFiles = new ArrayList<>();
-            String path = dialog.getContext().getFilesDir()+"/"+id;
+            String path = dialog.getContext().getFilesDir() + "/" + id;
 
-            stickerPackToJSONFile(sp, path+"/", dialog.getContext());
+            stickerPackToJSONFile(sp, path + "/", dialog.getContext());
 
-            for(Sticker s : sp.getStickers()){
-                namesOfFiles.add(path+"/"+sp.getIdentifier()+"-"+s.getImageFileName()+".webp");
+            for (Sticker s : sp.getStickers()) {
+                namesOfFiles.add(path + "/" + sp.getIdentifier() + "-" + s.getImageFileName() + ".webp");
             }
-            namesOfFiles.add(path+"/"+sp.getIdentifier()+"-trayImage.webp");
-            namesOfFiles.add(path+"/"+sp.getIdentifier()+".json");
+            namesOfFiles.add(path + "/" + sp.getIdentifier() + "-trayImage.webp");
+            namesOfFiles.add(path + "/" + sp.getIdentifier() + ".json");
             zip(namesOfFiles, path + "/" + sp.getIdentifier() + ".zip");
             return null;
         }
@@ -305,7 +301,7 @@ public class DataArchiver {
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
-            if (isAlreadyLoaded){
+            if (isAlreadyLoaded) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(dialog.getContext());
                 builder.setMessage("Sticker Pack is already loaded.")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -316,7 +312,7 @@ public class DataArchiver {
                 AlertDialog alert = builder.create();
                 alert.show();
             }
-            if (isFailed){
+            if (isFailed) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(dialog.getContext());
                 builder.setMessage("The zip file that was imported is not a proper sticker pack file.")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -331,27 +327,27 @@ public class DataArchiver {
 
         @Override
         protected Void doInBackground(Void... params) {
-            String packId = zipPath.split("/")[zipPath.split("/").length-1].replace(".zip", "");
-            unzip(zipPath, dialog.getContext().getFilesDir()+"/"+packId+"/");
+            String packId = zipPath.split("/")[zipPath.split("/").length - 1].replace(".zip", "");
+            unzip(zipPath, dialog.getContext().getFilesDir() + "/" + packId + "/");
 
-            String path = dialog.getContext().getFilesDir()+"/"+packId;
+            String path = dialog.getContext().getFilesDir() + "/" + packId;
 
-            String originalID = FilesUtils.getActualIDOfPack(path+"/");
+            String originalID = FilesUtils.getActualIDOfPack(path + "/");
 
-            File oldFolder = new File(dialog.getContext().getFilesDir(),packId);
+            File oldFolder = new File(dialog.getContext().getFilesDir(), packId);
 
-            if(StickerBook.getStickerPackById(originalID)==null){
+            if (StickerBook.getStickerPackById(originalID) == null) {
                 File newFolder = null;
-                try{
-                    newFolder = new File(dialog.getContext().getFilesDir(),originalID);
+                try {
+                    newFolder = new File(dialog.getContext().getFilesDir(), originalID);
                     oldFolder.renameTo(newFolder);
 
                     StickerPack sp = JSONFileToStickerPack(originalID, newFolder.getAbsolutePath(), dialog.getContext());
 
                     StickerBook.addStickerPackExisting(sp);
-                } catch (Exception e){
+                } catch (Exception e) {
                     isFailed = true;
-                    if(newFolder!=null){
+                    if (newFolder != null) {
                         newFolder.delete();
                     } else {
                         oldFolder.delete();
