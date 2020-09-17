@@ -8,18 +8,26 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:404374990962:android:0160aca1b36a51472852eb",
+        "mobilesdk_app_id": "1:404374990962:android:61e5a97ef01b59e02852eb",
         "android_client_info": {
-          "package_name": "com.omys.stickermaker"
+          "package_name": "com.omys.stickerapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "404374990962-q4f3f8324v3retfhod7m0qlfkvsgp2qf.apps.googleusercontent.com",
+          "client_id": "404374990962-c4a2701bbdvcb6aes99ja0bef3ruvb2o.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.omys.stickermaker",
-            "certificate_hash": "04bf9443fe363b634c576598cf52d0d2be3ade80"
+            "package_name": "com.omys.stickerapp",
+            "certificate_hash": "3aa7e5aec8e8ee0cd8971a6f75513bb644563354"
+          }
+        },
+        {
+          "client_id": "404374990962-l7qh8mgp8vr2mh9mo7cq2mnp9k3uemg5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.omys.stickerapp",
+            "certificate_hash": "356fe225a134d67b0876a5fba596f20b4345253a"
           }
         },
         {

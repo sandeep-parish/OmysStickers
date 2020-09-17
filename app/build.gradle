@@ -11,7 +11,7 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        applicationId "com.omys.stickermaker"
+        applicationId "com.omys.stickerapp"
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
@@ -28,14 +28,32 @@ android {
                 "\"${contentProviderAuthority}\"")
         multiDexEnabled true
     }
+
+    signingConfigs {
+        debug {
+            storeFile file("./debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+        release {
+            storeFile file("./stickerapp.jks")
+            storePassword "stickerapp"
+            keyAlias "stickerapp"
+            keyPassword "stickerapp"
+        }
+    }
+
     buildTypes {
         release {
+            debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
-            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
@@ -59,9 +77,7 @@ dependencies {
     implementation 'com.facebook.fresco:animated-webp:2.2.0'
     implementation 'com.facebook.fresco:webpsupport:2.2.0'
     implementation 'com.google.code.gson:gson:2.8.6'
-    // implementation 'com.google.android.gms:play-services-ads:17.1.0'
     implementation 'com.heinrichreimersoftware:material-intro:1.6'
-    // implementation 'com.android.billingclient:billing:3.0.0'
     implementation 'com.github.iammert:MaterialIntroView:1.6.0'
     implementation 'com.facebook.fresco:animated-base:2.2.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'

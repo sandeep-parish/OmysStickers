@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.omys.stickermaker">
+    package="com.omys.stickerapp">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".OmysApp"
+        android:name="com.omys.stickerapp.OmysApp"
         android:allowBackup="false"
         android:icon="@drawable/app_logo"
         android:label="@string/app_name"
@@ -19,10 +19,10 @@
         android:theme="@style/AppTheme"
         tools:node="replace"
         tools:targetApi="q">
-        <activity android:name=".app.StickerPackDetailsActivity" />
-        <activity android:name=".app.CreateNewStickerPackActivity" />
+        <activity android:name="com.omys.stickerapp.app.StickerPackDetailsActivity" />
+        <activity android:name="com.omys.stickerapp.app.CreateNewStickerPackActivity" />
 
-        <activity android:name=".app.AllStickersListActivity">
+        <activity android:name="com.omys.stickerapp.app.AllStickersListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,11 +42,11 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".app.NewUserIntroActivity"
+            android:name="com.omys.stickerapp.app.NewUserIntroActivity"
             android:theme="@style/Theme.Intro" />
 
         <provider
-            android:name=".wahelper.StickerContentProvider"
+            android:name="com.omys.stickerapp.wahelper.StickerContentProvider"
             android:authorities="${contentProviderAuthority}"
             android:enabled="true"
             android:exported="true"
