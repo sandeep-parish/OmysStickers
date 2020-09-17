@@ -21,12 +21,20 @@
         tools:targetApi="q">
         <activity android:name=".app.StickerPackDetailsActivity" />
         <activity android:name=".app.CreateNewStickerPackActivity" />
+
         <activity android:name=".app.AllStickersListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!--<intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <data android:mimeType="*/*" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>-->
         </activity>
 
         <meta-data
@@ -34,41 +42,11 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".WhatsAppBasedCode.StickerPackListActivity"
-            android:configChanges="keyboardHidden|orientation">
-            <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-
-                <data android:mimeType="*/*" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".WhatsAppBasedCode.StickerPackDetailsActivityOld"
-            android:parentActivityName=".WhatsAppBasedCode.StickerPackListActivity"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.omys.stickermaker.WhatsAppBasedCode.StickerPackListActivity" />
-        </activity>
-        <activity
-            android:name=".WhatsAppBasedCode.StickerPackInfoActivity"
-            android:parentActivityName=".WhatsAppBasedCode.StickerPackDetailsActivityOld"
-            tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.omys.stickermaker.WhatsAppBasedCode.StickerPackDetailsActivityOld" />
-        </activity>
-        <activity
-            android:name=".NewUserIntroActivity"
+            android:name=".app.NewUserIntroActivity"
             android:theme="@style/Theme.Intro" />
 
         <provider
-            android:name=".provider.StickerContentProvider"
+            android:name=".wahelper.StickerContentProvider"
             android:authorities="${contentProviderAuthority}"
             android:enabled="true"
             android:exported="true"

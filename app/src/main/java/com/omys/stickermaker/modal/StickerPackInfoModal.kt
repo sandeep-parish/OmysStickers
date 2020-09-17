@@ -13,6 +13,7 @@ class StickerPackInfoModal() : Parcelable {
     var stickers = ArrayList<String>()
     var tray_image_file: String? = null
     var createdAt: Long = 0
+    var totalStickers: Int = 0
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readString()
@@ -20,6 +21,7 @@ class StickerPackInfoModal() : Parcelable {
         publisher = parcel.readString()
         tray_image_file = parcel.readString()
         createdAt = parcel.readLong()
+        totalStickers = parcel.readInt()
         parcel.readList(stickers as List<*>, null)
     }
 
@@ -29,6 +31,7 @@ class StickerPackInfoModal() : Parcelable {
         parcel.writeString(publisher)
         parcel.writeString(tray_image_file)
         parcel.writeLong(createdAt)
+        parcel.writeInt(totalStickers)
         parcel.writeList(stickers as List<*>?)
     }
 

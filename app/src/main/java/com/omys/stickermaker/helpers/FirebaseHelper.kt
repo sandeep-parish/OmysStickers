@@ -64,7 +64,7 @@ class FirebaseHelper(private val activity: Activity?) {
                 }
     }
 
-    fun downloadFileFromFirebaseUrl(fileUrl: String?, directory: String?, type: String, callback: OnFileDownload?) {
+    fun downloadFileFromFirebaseUrl(fileUrl: String?, directory: String?, type: String, callback: OnFileDownload? = null) {
         fileUrl ?: return
 
         val storageRef = firebaseStorage?.getReferenceFromUrl(fileUrl)

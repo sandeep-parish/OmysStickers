@@ -1,4 +1,4 @@
-package com.omys.stickermaker;
+package com.omys.stickermaker.app;
 
 import android.Manifest;
 import android.app.Activity;
@@ -19,6 +19,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.app.NavigationPolicy;
 import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
+import com.omys.stickermaker.R;
 
 public class NewUserIntroActivity extends IntroActivity {
 

@@ -5,10 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.omys.stickermaker.R
+import com.omys.stickermaker.utils.avoidDoubleClicks
 import com.omys.stickermaker.utils.loadImage
 import kotlinx.android.synthetic.main.item_sticker.view.*
 
-class StickersListAdapter : RecyclerView.Adapter<StickersListAdapter.ReportItemViewHolder>() {
+class StickersListAdapter(private val onStickerClick: OnStickerClick? = null, private var layoutResource: Int = 0) : RecyclerView.Adapter<StickersListAdapter.ReportItemViewHolder>() {
 
     val stickers = ArrayList<String>()
 
@@ -25,8 +26,11 @@ class StickersListAdapter : RecyclerView.Adapter<StickersListAdapter.ReportItemV
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportItemViewHolder {
+        if (layoutResource == 0) {
+            layoutResource = R.layout.item_sticker
+        }
         val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_sticker, parent, false)
+                .inflate(layoutResource, parent, false)
         return ReportItemViewHolder(itemView)
     }
 
@@ -42,9 +46,17 @@ class StickersListAdapter : RecyclerView.Adapter<StickersListAdapter.ReportItemV
         return position
     }
 
-    class ReportItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ReportItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindItem(stickerUri: String) {
             itemView.stickerView?.loadImage(stickerUri)
+            itemView.setOnClickListener {
+                it.avoidDoubleClicks()
+                onStickerClick?.onStickerClick(stickerUri)
+            }
         }
+    }
+
+    interface OnStickerClick {
+        fun onStickerClick(any: Any)
     }
 }

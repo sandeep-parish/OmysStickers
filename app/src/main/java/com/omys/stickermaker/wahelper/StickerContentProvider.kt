@@ -1,297 +1,233 @@
-package com.omys.stickermaker.provider;
+package com.omys.stickermaker.wahelper
 
-import android.content.ContentProvider;
-import android.content.ContentValues;
-import android.content.UriMatcher;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
-import android.database.Cursor;
-import android.database.MatrixCursor;
-import android.net.Uri;
-import android.os.ParcelFileDescriptor;
-import android.text.TextUtils;
-import android.util.Log;
+import android.content.ContentProvider
+import android.content.ContentValues
+import android.content.UriMatcher
+import android.content.res.AssetFileDescriptor
+import android.content.res.AssetManager
+import android.database.Cursor
+import android.database.MatrixCursor
+import android.net.Uri
+import android.os.ParcelFileDescriptor
+import android.text.TextUtils
+import android.util.Log
+import com.omys.stickermaker.BuildConfig
+import com.omys.stickermaker.database.OmysDatabase
+import com.omys.stickermaker.database.StickerPacksDao
+import com.omys.stickermaker.modal.StickerPackModal
+import com.omys.stickermaker.utils.APP_DIRECTORY
+import com.omys.stickermaker.utils.debugPrint
+import com.omys.stickermaker.utils.getStickerFilesDirectory
+import com.omys.stickermaker.utils.getTrayImagesDirectory
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+class StickerContentProvider : ContentProvider() {
 
-import com.omys.stickermaker.BuildConfig;
-import com.omys.stickermaker.modal.Sticker;
-import com.omys.stickermaker.modal.StickerPackModal;
-import com.omys.stickermaker.utils.UserPrefs;
+    private var stickersPack: StickerPacksDao? = null
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
-import static com.omys.stickermaker.utils.KeyUtilsKt.APP_DIRECTORY;
-import static com.omys.stickermaker.utils.KeyUtilsKt.TRAY_FILE_PATH;
-
-public class StickerContentProvider extends ContentProvider {
-
-
-    /**
-     * Do not change the strings listed below, as these are used by WhatsApp. And changing these will break the interface between sticker app and WhatsApp.
-     */
-    public static final String STICKER_PACK_IDENTIFIER_IN_QUERY = "sticker_pack_identifier";
-    public static final String STICKER_PACK_NAME_IN_QUERY = "sticker_pack_name";
-    public static final String STICKER_PACK_PUBLISHER_IN_QUERY = "sticker_pack_publisher";
-    public static final String STICKER_PACK_ICON_IN_QUERY = "sticker_pack_icon";
-    public static final String ANDROID_APP_DOWNLOAD_LINK_IN_QUERY = "android_play_store_link";
-    public static final String IOS_APP_DOWNLOAD_LINK_IN_QUERY = "ios_app_download_link";
-    public static final String PUBLISHER_EMAIL = "sticker_pack_publisher_email";
-    public static final String PUBLISHER_WEBSITE = "sticker_pack_publisher_website";
-    public static final String PRIVACY_POLICY_WEBSITE = "sticker_pack_privacy_policy_website";
-    public static final String LICENSE_AGREENMENT_WEBSITE = "sticker_pack_license_agreement_website";
-
-    public static final String STICKER_FILE_NAME_IN_QUERY = "sticker_file_name";
-    public static final String STICKER_FILE_EMOJI_IN_QUERY = "sticker_emoji";
-    public static final String CONTENT_FILE_NAME = "contents.json";
-
-    public static final String CONTENT_SCHEME = "content";
-    private static final String TAG = StickerContentProvider.class.getSimpleName();
-    public static Uri AUTHORITY_URI = new Uri.Builder().scheme(StickerContentProvider.CONTENT_SCHEME).authority(BuildConfig.CONTENT_PROVIDER_AUTHORITY).appendPath(StickerContentProvider.METADATA).build();
-
-    /**
-     * Do not change the values in the UriMatcher because otherwise, WhatsApp will not be able to fetch the stickers from the ContentProvider.
-     */
-    private static final UriMatcher MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
-    static final String METADATA = "metadata";
-    private static final int METADATA_CODE = 1;
-
-    private static final int METADATA_CODE_FOR_SINGLE_PACK = 2;
-
-    static final String STICKERS = "stickers";
-    private static final int STICKERS_CODE = 3;
-
-
-    private static final int STICKERS_ASSET_CODE = 4;
-
-    private static final int STICKER_PACK_TRAY_ICON_CODE = 5;
-
-    private List<StickerPackModal> stickerPackList = new ArrayList<>();
-
-
-    @Override
-    public boolean onCreate() {
-        final String authority = BuildConfig.CONTENT_PROVIDER_AUTHORITY;
-        if (!authority.startsWith(Objects.requireNonNull(getContext()).getPackageName())) {
-            throw new IllegalStateException("your authority (" + authority + ") for the content provider should start with your package name: " + getContext().getPackageName());
+    override fun onCreate(): Boolean {
+        val authority = BuildConfig.CONTENT_PROVIDER_AUTHORITY
+        check(authority.startsWith(context?.packageName.toString())) {
+            "your authority (" + authority + ") for the content provider should start with your package name: " + context?.packageName
         }
+        stickersPack = OmysDatabase.getDatabase(context).stickerPacksDatabase()
 
         //the call to get the metadata for the sticker packs.
-        MATCHER.addURI(authority, METADATA, METADATA_CODE);
+        MATCHER.addURI(authority, METADATA, METADATA_CODE)
 
         //the call to get the metadata for single sticker pack. * represent the identifier
-        MATCHER.addURI(authority, METADATA + "/*", METADATA_CODE_FOR_SINGLE_PACK);
+        MATCHER.addURI(authority, "$METADATA/*", METADATA_CODE_FOR_SINGLE_PACK)
 
         //gets the list of stickers for a sticker pack, * respresent the identifier.
-        MATCHER.addURI(authority, STICKERS + "/*", STICKERS_CODE);
-
-        for (StickerPackModal stickerPack : getStickerPackList()) {
-            Log.e(TAG, "onCreate: " + stickerPack.getIdentifier());
-            MATCHER.addURI(authority, APP_DIRECTORY + "/" + stickerPack.getIdentifier() + "/" + stickerPack.getTrayImageFile(), STICKER_PACK_TRAY_ICON_CODE);
-
-            for (Sticker sticker : stickerPack.getStickers()) {
-                MATCHER.addURI(authority, APP_DIRECTORY + "/" + stickerPack.getIdentifier() + "/" + sticker.getImageFileName(), STICKERS_ASSET_CODE);
+        MATCHER.addURI(authority, "$STICKERS/*", STICKERS_CODE)
+        for (stickerPack in getStickerPacksList()) {
+            MATCHER.addURI(authority, APP_DIRECTORY + "/" + stickerPack.identifier + "/" + stickerPack.trayImageFile, STICKER_PACK_TRAY_ICON_CODE)
+            for (sticker in stickerPack.stickers) {
+                MATCHER.addURI(authority, APP_DIRECTORY + "/" + stickerPack.identifier + "/" + sticker.imageFileName, STICKERS_ASSET_CODE)
             }
         }
-
-        return true;
+        return true
     }
 
-    @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, String selection,
-                        String[] selectionArgs, String sortOrder) {
-        final int code = MATCHER.match(uri);
-        Log.d(TAG, "query: " + code + uri);
-        if (code == METADATA_CODE) {
-            return getPackForAllStickerPacks(uri);
+    /**always Query sticker packs with updated data*/
+    private fun getStickerPacksList(): ArrayList<StickerPackModal> {
+        val stickerPacks = ArrayList<StickerPackModal>()
+        stickerPacks.addAll(stickersPack?.getAllStickerPacks()!!)
+        return stickerPacks
+    }
+
+    override fun query(uri: Uri, projection: Array<String>?, selection: String?,
+                       selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
+        val code = MATCHER.match(uri)
+        return if (code == METADATA_CODE) {
+            getPackForAllStickerPacks(uri)
         } else if (code == METADATA_CODE_FOR_SINGLE_PACK) {
-            return getCursorForSingleStickerPack(uri);
+            getCursorForSingleStickerPack(uri)
         } else if (code == STICKERS_CODE) {
-            return getStickersForAStickerPack(uri);
+            getStickersForAStickerPack(uri)
         } else {
-            throw new IllegalArgumentException("Unknown URI: " + uri);
+            throw IllegalArgumentException("Unknown URI: $uri")
         }
     }
 
-    @Nullable
-    @Override
-    public AssetFileDescriptor openAssetFile(@NonNull Uri uri, @NonNull String mode) throws FileNotFoundException {
-        MATCHER.match(uri);
-        final int matchCode = MATCHER.match(uri);
-        final List<String> pathSegments = uri.getPathSegments();
-        Log.d(TAG, "openFile: " + matchCode + uri + "\n" + uri.getAuthority()
-                + "\n" + pathSegments.get(pathSegments.size() - 3) + "/"
-                + "\n" + pathSegments.get(pathSegments.size() - 2) + "/"
-                + "\n" + pathSegments.get(pathSegments.size() - 1));
-
-        return getImageAsset(uri);
+    @Throws(FileNotFoundException::class)
+    override fun openAssetFile(uri: Uri, mode: String): AssetFileDescriptor? {
+        MATCHER.match(uri)
+        return getImageAsset(uri)
     }
 
-
-    private AssetFileDescriptor getImageAsset(Uri uri) throws IllegalArgumentException {
-        AssetManager am = Objects.requireNonNull(getContext()).getAssets();
-        final List<String> pathSegments = uri.getPathSegments();
-        if (pathSegments.size() != 3) {
-            throw new IllegalArgumentException("path segments should be 3, uri is: " + uri);
-        }
-        String fileName = pathSegments.get(pathSegments.size() - 1);
-        final String identifier = pathSegments.get(pathSegments.size() - 2);
-        if (TextUtils.isEmpty(identifier)) {
-            throw new IllegalArgumentException("identifier is empty, uri: " + uri);
-        }
-        if (TextUtils.isEmpty(fileName)) {
-            throw new IllegalArgumentException("file name is empty, uri: " + uri);
-        }
+    @Throws(IllegalArgumentException::class)
+    private fun getImageAsset(uri: Uri): AssetFileDescriptor? {
+        val pathSegments = uri.pathSegments
+        require(pathSegments.size == 3) { "path segments should be 3, uri is: $uri" }
+        val fileName = pathSegments[pathSegments.size - 1]
+        val identifier = pathSegments[pathSegments.size - 2]
+        require(!TextUtils.isEmpty(identifier)) { "identifier is empty, uri: $uri" }
+        require(!TextUtils.isEmpty(fileName)) { "file name is empty, uri: $uri" }
         //making sure the file that is trying to be fetched is in the list of stickers.
-        for (StickerPackModal stickerPack : getStickerPackList()) {
-            if (identifier.equals(stickerPack.getIdentifier())) {
-                if (fileName.equals(stickerPack.getTrayImageFile())) {
-                    return fetchFile(uri, am, fileName, identifier);
+        for (stickerPack in getStickerPacksList()) {
+            if (identifier == stickerPack.identifier) {
+                if (fileName == stickerPack.trayImageFile) {
+                    return fetchFile(uri, context?.assets!!, fileName, identifier)
                 } else {
-                    for (Sticker sticker : stickerPack.getStickers()) {
-                        if (fileName.equals(sticker.getImageFileName())) {
-                            return fetchFile(uri, am, fileName, identifier);
+                    for (sticker in stickerPack.stickers) {
+                        if (fileName == sticker.imageFileName) {
+                            return fetchFile(uri, context?.assets!!, fileName, identifier)
                         }
                     }
                 }
             }
         }
-        return null;
+        return null
     }
 
-    private AssetFileDescriptor fetchFile(@NonNull Uri uri, @NonNull AssetManager am, @NonNull String fileName, @NonNull String identifier) {
-        try {
-            File file;
-            if (fileName.endsWith(".png")) {
-                file = new File(getContext().getFilesDir() + "/" + APP_DIRECTORY + "/" + identifier + "/" + TRAY_FILE_PATH, fileName);
+    private fun fetchFile(uri: Uri, am: AssetManager, fileName: String, identifier: String): AssetFileDescriptor? {
+        return try {
+            val file = if (fileName.endsWith(".png")) {
+                File(context!!.getTrayImagesDirectory(identifier), fileName)
             } else {
-                file = new File(getContext().getFilesDir() + "/" + APP_DIRECTORY + "/" + identifier + "/", fileName);
+                File(context!!.getStickerFilesDirectory(identifier) + "/", fileName)
             }
             if (!file.exists()) {
-                Log.d("fetFile", "StickerPackModal dir not found");
+                debugPrint("StickerPackModal dir not found")
             }
-            Log.d("fetchFile", "StickerPackModal " + file.getPath());
-            return new AssetFileDescriptor(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY), 0L, -1L);
-        } catch (IOException e) {
-            Log.e(Objects.requireNonNull(getContext()).getPackageName(), "IOException when getting asset file, uri:" + uri, e);
-            return null;
+            AssetFileDescriptor(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY), 0L, -1L)
+        } catch (e: IOException) {
+            Log.e(context?.packageName, "IOException when getting asset file, uri:$uri", e)
+            null
         }
     }
 
-
-    @Override
-    public String getType(@NonNull Uri uri) {
-        final int matchCode = MATCHER.match(uri);
-        switch (matchCode) {
-            case METADATA_CODE:
-                return "vnd.android.cursor.dir/vnd." + BuildConfig.CONTENT_PROVIDER_AUTHORITY + "." + METADATA;
-            case METADATA_CODE_FOR_SINGLE_PACK:
-                return "vnd.android.cursor.item/vnd." + BuildConfig.CONTENT_PROVIDER_AUTHORITY + "." + METADATA;
-            case STICKERS_CODE:
-                return "vnd.android.cursor.dir/vnd." + BuildConfig.CONTENT_PROVIDER_AUTHORITY + "." + STICKERS;
-            case STICKERS_ASSET_CODE:
-                return "image/webp";
-            case STICKER_PACK_TRAY_ICON_CODE:
-                return "image/png";
-            default:
-                throw new IllegalArgumentException("Unknown URI: " + uri);
+    override fun getType(uri: Uri): String? {
+        return when (MATCHER.match(uri)) {
+            METADATA_CODE -> "vnd.android.cursor.dir/vnd." + BuildConfig.CONTENT_PROVIDER_AUTHORITY + "." + METADATA
+            METADATA_CODE_FOR_SINGLE_PACK -> "vnd.android.cursor.item/vnd." + BuildConfig.CONTENT_PROVIDER_AUTHORITY + "." + METADATA
+            STICKERS_CODE -> "vnd.android.cursor.dir/vnd." + BuildConfig.CONTENT_PROVIDER_AUTHORITY + "." + STICKERS
+            STICKERS_ASSET_CODE -> "image/webp"
+            STICKER_PACK_TRAY_ICON_CODE -> "image/png"
+            else -> throw IllegalArgumentException("Unknown URI: $uri")
         }
     }
 
-    /* private synchronized void readContentFile(@NonNull Context context) {
-         if (Hawk.get("sticker_pack", new ArrayList<StickerPackModal>()) != null) {
-             stickerPackList.addAll(Hawk.get("sticker_pack", new ArrayList<StickerPackModal>()));
-         }
-     }
- */
-    public ArrayList<StickerPackModal> getStickerPackList() {
-        return new UserPrefs(this.getContext()).getSavedStickerPacks();
+    private fun getPackForAllStickerPacks(uri: Uri): Cursor {
+        return getStickerPackInfo(uri, getStickerPacksList())
     }
 
-    private Cursor getPackForAllStickerPacks(@NonNull Uri uri) {
-        return getStickerPackInfo(uri, getStickerPackList());
-    }
-
-    private Cursor getCursorForSingleStickerPack(@NonNull Uri uri) {
-        final String identifier = uri.getLastPathSegment();
-        for (StickerPackModal stickerPack : getStickerPackList()) {
-            if (identifier.equals(stickerPack.getIdentifier())) {
-                return getStickerPackInfo(uri, Collections.singletonList(stickerPack));
+    private fun getCursorForSingleStickerPack(uri: Uri): Cursor {
+        val identifier = uri.lastPathSegment
+        for (stickerPack in getStickerPacksList()) {
+            if (identifier == stickerPack.identifier) {
+                return getStickerPackInfo(uri, listOf(stickerPack))
             }
         }
-
-        return getStickerPackInfo(uri, new ArrayList<StickerPackModal>());
+        return getStickerPackInfo(uri, ArrayList())
     }
 
-    @NonNull
-    private Cursor getStickerPackInfo(@NonNull Uri uri, @NonNull List<StickerPackModal> stickerPackList) {
-        MatrixCursor cursor = new MatrixCursor(
-                new String[]{
-                        STICKER_PACK_IDENTIFIER_IN_QUERY,
-                        STICKER_PACK_NAME_IN_QUERY,
-                        STICKER_PACK_PUBLISHER_IN_QUERY,
-                        STICKER_PACK_ICON_IN_QUERY,
-                        ANDROID_APP_DOWNLOAD_LINK_IN_QUERY,
-                        IOS_APP_DOWNLOAD_LINK_IN_QUERY,
-                        PUBLISHER_EMAIL,
-                        PUBLISHER_WEBSITE,
-                        PRIVACY_POLICY_WEBSITE,
-                        LICENSE_AGREENMENT_WEBSITE
-                });
-        for (StickerPackModal stickerPack : stickerPackList) {
-            MatrixCursor.RowBuilder builder = cursor.newRow();
-            builder.add(stickerPack.getIdentifier());
-            builder.add(stickerPack.getName());
-            builder.add(stickerPack.getPublisher());
-            builder.add(stickerPack.getTrayImageFile());
-            builder.add(stickerPack.getAndroidPlayStoreLink());
-            builder.add(stickerPack.getIosAppStoreLink());
-            builder.add(stickerPack.getPublisherEmail());
-            builder.add(stickerPack.getPublisherWebsite());
-            builder.add(stickerPack.getPrivacyPolicyWebsite());
-            builder.add(stickerPack.getLicenseAgreementWebsite());
+    private fun getStickerPackInfo(uri: Uri, stickerPackList: List<StickerPackModal>): Cursor {
+        val cursor = MatrixCursor(arrayOf(
+                STICKER_PACK_IDENTIFIER_IN_QUERY,
+                STICKER_PACK_NAME_IN_QUERY,
+                STICKER_PACK_PUBLISHER_IN_QUERY,
+                STICKER_PACK_ICON_IN_QUERY,
+                ANDROID_APP_DOWNLOAD_LINK_IN_QUERY,
+                IOS_APP_DOWNLOAD_LINK_IN_QUERY,
+                PUBLISHER_EMAIL,
+                PUBLISHER_WEBSITE,
+                PRIVACY_POLICY_WEBSITE,
+                LICENSE_AGREENMENT_WEBSITE
+        ))
+        for (stickerPack in stickerPackList) {
+            val builder = cursor.newRow()
+            builder.add(stickerPack.identifier)
+            builder.add(stickerPack.name)
+            builder.add(stickerPack.publisher)
+            builder.add(stickerPack.trayImageFile)
+            builder.add(stickerPack.androidPlayStoreLink)
+            builder.add(stickerPack.iosAppStoreLink)
+            builder.add(stickerPack.publisherEmail)
+            builder.add(stickerPack.publisherWebsite)
+            builder.add(stickerPack.privacyPolicyWebsite)
+            builder.add(stickerPack.licenseAgreementWebsite)
         }
-        Log.d(TAG, "getStickerPackInfo: " + stickerPackList.size());
-        cursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri);
-        return cursor;
+        cursor.setNotificationUri(context?.contentResolver, uri)
+        return cursor
     }
 
-    @NonNull
-    private Cursor getStickersForAStickerPack(@NonNull Uri uri) {
-        final String identifier = uri.getLastPathSegment();
-        MatrixCursor cursor = new MatrixCursor(new String[]{STICKER_FILE_NAME_IN_QUERY, STICKER_FILE_EMOJI_IN_QUERY});
-        for (StickerPackModal stickerPack : getStickerPackList()) {
-            if (identifier.equals(stickerPack.getIdentifier())) {
-                for (Sticker sticker : stickerPack.getStickers()) {
-                    cursor.addRow(new Object[]{sticker.getImageFileName(), TextUtils.join(",", sticker.getEmojis())});
+    private fun getStickersForAStickerPack(uri: Uri): Cursor {
+        val identifier = uri.lastPathSegment
+        val cursor = MatrixCursor(arrayOf(STICKER_FILE_NAME_IN_QUERY, STICKER_FILE_EMOJI_IN_QUERY))
+        for (stickerPack in getStickerPacksList()) {
+            if (identifier == stickerPack.identifier) {
+                for (sticker in stickerPack.stickers) {
+                    cursor.addRow(arrayOf<Any?>(sticker.imageFileName, TextUtils.join(",", sticker.emojis)))
                 }
             }
         }
-        cursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri);
-        return cursor;
+        cursor.setNotificationUri(context?.contentResolver, uri)
+        return cursor
     }
 
-
-    @Override
-    public int delete(@NonNull Uri uri, @Nullable String selection, String[] selectionArgs) {
-        throw new UnsupportedOperationException("Not supported");
+    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
+        throw UnsupportedOperationException("Not supported")
     }
 
-    @Override
-    public Uri insert(@NonNull Uri uri, ContentValues values) {
-        throw new UnsupportedOperationException("Not supported");
+    override fun insert(uri: Uri, values: ContentValues?): Uri? {
+        throw UnsupportedOperationException("Not supported")
     }
 
-    @Override
-    public int update(@NonNull Uri uri, ContentValues values, String selection,
-                      String[] selectionArgs) {
-        throw new UnsupportedOperationException("Not supported");
+    override fun update(uri: Uri, values: ContentValues?, selection: String?,
+                        selectionArgs: Array<String>?): Int {
+        throw UnsupportedOperationException("Not supported")
+    }
+
+    /**
+     * Do not change the strings listed below, as these are used by WhatsApp. And changing these will break the interface between sticker app and WhatsApp.
+     */
+    companion object {
+        const val STICKER_PACK_IDENTIFIER_IN_QUERY = "sticker_pack_identifier"
+        const val STICKER_PACK_NAME_IN_QUERY = "sticker_pack_name"
+        const val STICKER_PACK_PUBLISHER_IN_QUERY = "sticker_pack_publisher"
+        const val STICKER_PACK_ICON_IN_QUERY = "sticker_pack_icon"
+        const val ANDROID_APP_DOWNLOAD_LINK_IN_QUERY = "android_play_store_link"
+        const val IOS_APP_DOWNLOAD_LINK_IN_QUERY = "ios_app_download_link"
+        const val PUBLISHER_EMAIL = "sticker_pack_publisher_email"
+        const val PUBLISHER_WEBSITE = "sticker_pack_publisher_website"
+        const val PRIVACY_POLICY_WEBSITE = "sticker_pack_privacy_policy_website"
+        const val LICENSE_AGREENMENT_WEBSITE = "sticker_pack_license_agreement_website"
+        const val STICKER_FILE_NAME_IN_QUERY = "sticker_file_name"
+        const val STICKER_FILE_EMOJI_IN_QUERY = "sticker_emoji"
+        const val CONTENT_SCHEME = "content"
+
+
+        private val MATCHER = UriMatcher(UriMatcher.NO_MATCH)
+        const val METADATA = "metadata"
+        private const val METADATA_CODE = 1
+        private const val METADATA_CODE_FOR_SINGLE_PACK = 2
+        const val STICKERS = "stickers"
+        private const val STICKERS_CODE = 3
+        private const val STICKERS_ASSET_CODE = 4
+        private const val STICKER_PACK_TRAY_ICON_CODE = 5
     }
 }

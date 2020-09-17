@@ -18,7 +18,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.omys.stickermaker.BuildConfig
 import com.omys.stickermaker.R
-import com.omys.stickermaker.modal.StickerPackInfoModal
 
 fun debugPrint(message: String?) {
     if (BuildConfig.DEBUG) {
@@ -76,15 +75,15 @@ fun AppCompatActivity.changeStatusBarColor(@ColorRes color: Int) {
 }
 
 
-fun Activity.addStickerPackToWhatsApp(stickerPackInfoModal: StickerPackInfoModal?) {
-    stickerPackInfoModal ?: return
+fun Activity.addStickerPackToWhatsApp(identifier: String?, packName: String?) {
+    if (identifier.isNullOrEmpty() || packName.isNullOrEmpty()) return
     val intent = Intent()
     intent.action = ACTION_ENABLE_STICKER_PACK
-    intent.putExtra(EXTRA_STICKER_PACK_ID, stickerPackInfoModal.id)
+    intent.putExtra(EXTRA_STICKER_PACK_ID, identifier)
     intent.putExtra(EXTRA_STICKER_PACK_AUTHORITY, BuildConfig.CONTENT_PROVIDER_AUTHORITY)
-    intent.putExtra(EXTRA_STICKER_PACK_NAME, stickerPackInfoModal.name)
+    intent.putExtra(EXTRA_STICKER_PACK_NAME, packName)
     try {
-        startActivityForResult(intent, ADD_STICKER_CODE)
+        startActivityForResult(intent, ADD_STICKER_PACK_CODE)
     } catch (e: ActivityNotFoundException) {
         Toast.makeText(this, R.string.error_adding_sticker_pack, Toast.LENGTH_LONG).show()
     }

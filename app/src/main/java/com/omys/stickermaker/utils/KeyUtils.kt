@@ -1,5 +1,7 @@
 package com.omys.stickermaker.utils
 
+import com.omys.stickermaker.BuildConfig
+
 const val ARGS1 = "args1"
 
 const val DIR_TRAY_IMG = "TrayImages/"
@@ -11,6 +13,7 @@ const val KEY_STICKER_PACK = "StickerPacks"
 
 const val KEY_CREATED_AT = "createdAt"
 const val KEY_STICKERS = "stickers"
+const val KEY_TOTAL_STICKERS = "totalStickers"
 
 //file types
 const val FILE_IMAGE = "image/*"
@@ -19,7 +22,7 @@ const val STICKER = "sticker"
 
 //Request Codes
 const val FILE_PICKER_REQUEST_CODE = 1001
-const val ADD_STICKER_CODE = 1002
+const val ADD_STICKER_PACK_CODE = 1002
 
 //Static data
 const val PUBLISHER_EMAIL = "sk.parish01@gmail.com"
@@ -38,5 +41,5 @@ const val EXTRA_STICKER_PACK_ID = "sticker_pack_id"
 const val EXTRA_STICKER_PACK_AUTHORITY = "sticker_pack_authority"
 const val EXTRA_STICKER_PACK_NAME = "sticker_pack_name"
 
-
-val EMOJIES_ARRAY = arrayOf("😀", "😁", "😂", "😃", "😄", "😅", "😆", "😇", "😈", "👿", "😉", "😊", "☺", "😋", "😌", "😍", "😎", "😏", "😐", "😑", "😒", "😓", "😔", "😕", "😖", "😗", "😘", "😙", "😚", "😛", "😜", "😝", "😞", "😟", "😠", "😡", "😢", "😣", "😤", "😥", "😦", "😧", "😨", "😩", "😪", "😫", "😬", "😭", "😮", "😯", "😰", "😱", "😲", "😳", "😴", "😵", "😶", "😷", "😸", "😹", "😺", "😻", "😼", "😽", "😾", "😿", "🙀")
+//For admin feature
+val IS_ADMIN_RIGHTS = BuildConfig.DEBUG

@@ -42,9 +42,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    dataBinding {
+    /*dataBinding {
         enabled = true
-    }
+    }*/
 }
 
 dependencies {
@@ -78,5 +78,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.5.0'
     implementation 'com.google.firebase:firebase-storage-ktx:19.2.0'
     implementation 'com.google.firebase:firebase-firestore:21.6.0'
+
+    //Room Database
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    kapt "android.arch.persistence.room:compiler:1.1.1"
 }
 apply plugin: 'com.google.gms.google-services'

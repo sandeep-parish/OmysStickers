@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@android:color/white"
-    app:contentPadding="10dp"
-    app:cardElevation="5dp">
+    app:cardElevation="5dp"
+    app:contentPadding="10dp">
 
     <RelativeLayout
         android:id="@+id/sticker_store_row_container"
@@ -51,25 +51,6 @@
                     android:textColor="@android:color/black"
                     tools:text="Sandeep Parish - 16 Stickers" />
 
-                <!--TextView
-                    android:id="@+id/sticker_pack_list_item_dot"
-                    style="@style/sticker_packs_list_item_author_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:paddingEnd="@dimen/sticker_pack_list_item_row_dot_horizontal_padding"
-                    android:paddingLeft="@dimen/sticker_pack_list_item_row_dot_horizontal_padding"
-                    android:paddingRight="@dimen/sticker_pack_list_item_row_dot_horizontal_padding"
-                    android:paddingStart="@dimen/sticker_pack_list_item_row_dot_horizontal_padding"
-                    android:text="@string/dot" /-->
-
-
-                <!--TextView
-                    android:id="@+id/sticker_pack_filesize"
-                    style="@style/sticker_packs_list_item_author_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    tools:text="700kb" /-->
-
             </LinearLayout>
 
             <LinearLayout
@@ -98,8 +79,8 @@
             android:id="@+id/sticker_packs_list_item_image_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_below="@+id/packInfoView"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal" />
 
     </RelativeLayout>

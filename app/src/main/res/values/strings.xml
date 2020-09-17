@@ -29,6 +29,9 @@
     <string name="minStickerLimit">In order to be applied to WhatsApp, the sticker pack must have at least 3 stickers. Please add more stickers first.</string>
     <string name="add">Add</string>
     <string name="pleaseWait">Please Wait...</string>
+    <string name="share">Share</string>
+    <string name="add_sticker">Add Sticker</string>
+    <string name="save">Save</string>
 
     <!-- Admob data -->
     <!--

@@ -13,4 +13,7 @@
     <color name="color_e6e6e6">#E6E6E6</color>
     <color name="color_1A000000">#1A000000</color>
     <color name="color_0E0E0E">#0E0E0E</color>
+    <color name="color_FF30B136">#FF30B136</color>
+    <color name="color_313131">#313131</color>
+    <color name="lighter_gray">#F4F4F4</color>
 </resources>

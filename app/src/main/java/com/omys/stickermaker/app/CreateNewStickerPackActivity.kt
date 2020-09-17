@@ -50,9 +50,16 @@ class CreateNewStickerPackActivity : AppCompatActivity(), OnUploadCallback, OnSi
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             FILE_PICKER_REQUEST_CODE -> {
-                fileUri = data?.data
-                fileUri?.let { contentResolver.takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION) }
-                stickerTrayImage?.setImageURI(fileUri)
+                val uri = data?.data
+                uri?.let { contentResolver.takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION) }
+                val fileExtension = getFileExtensionFromUri(uri!!)
+                if (fileExtension.equals(".png", true)) {
+                    fileUri = uri
+                    stickerTrayImage?.setImageURI(fileUri)
+                } else {
+                    showToast("$fileExtension is not supported for tray images")
+                }
+
             }
         }
     }
@@ -67,10 +74,11 @@ class CreateNewStickerPackActivity : AppCompatActivity(), OnUploadCallback, OnSi
 
     private fun createNewStickerPack(fileUrl: String) {
         val stickerPack = StickerPackInfoModal()
-        stickerPack.name = etPackName.text.toString()
-        stickerPack.publisher = etPackCreator.text.toString().trim()
+        stickerPack.name = etPackName.text.toString().capitalize()
+        stickerPack.publisher = etPackCreator.text.toString().trim().capitalize()
         stickerPack.tray_image_file = fileUrl
         stickerPack.createdAt = System.currentTimeMillis()
+        stickerPack.totalStickers = 0
         firebaseHelper?.createNewStickerPack(stickerPack, this)
     }
 
