@@ -10,4 +10,7 @@
     <color name="darkBlue">#3065ba</color>
     <color name="lightRed">#f44141</color>
     <color name="darkRed">#cc3939</color>
+    <color name="color_e6e6e6">#E6E6E6</color>
+    <color name="color_1A000000">#1A000000</color>
+    <color name="color_0E0E0E">#0E0E0E</color>
 </resources>

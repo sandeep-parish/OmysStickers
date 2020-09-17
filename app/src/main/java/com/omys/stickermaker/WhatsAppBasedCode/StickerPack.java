@@ -23,17 +23,17 @@ public class StickerPack implements Parcelable {
     String trayImageUri;
     public String identifier;
     public String name;
-    String publisher;
-    String trayImageFile;
-    final String publisherEmail;
-    final String publisherWebsite;
-    final String privacyPolicyWebsite;
-    final String licenseAgreementWebsite;
+    public String publisher;
+    public String trayImageFile;
+    public final String publisherEmail;
+    public final String publisherWebsite;
+    public final String privacyPolicyWebsite;
+    public final String licenseAgreementWebsite;
 
-    String iosAppStoreLink;
+    public String iosAppStoreLink;
     private List<Sticker> stickers;
     private long totalSize;
-    String androidPlayStoreLink;
+    public String androidPlayStoreLink;
     private boolean isWhitelisted;
     private int stickersAddedIndex = 0;
 

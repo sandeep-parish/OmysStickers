@@ -54,25 +54,42 @@
 
         </LinearLayout>
 
-        <LinearLayout
+
+        <TextView
+            android:id="@+id/btnAddStickerPack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:orientation="horizontal">
+            android:background="@drawable/rounded_border_bg"
+            android:fontFamily="@font/roboto_regular"
+            android:paddingHorizontal="@dimen/_15sdp"
+            android:paddingVertical="@dimen/_3sdp"
+            android:text="@string/add"
+            android:textAllCaps="true"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_11ssp" />
 
-            <ImageView
-                android:id="@+id/add_button_on_list"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="5dp"
-                android:scaleType="center"
-                android:src="@drawable/icon_add_circle"
-                app:tint="@color/colorAccent" />
+        <!--
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal">
 
-        </LinearLayout>
+                    <ImageView
+                        android:id="@+id/add_button_on_list"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="5dp"
+                        android:scaleType="center"
+                        android:src="@drawable/icon_add_circle"
+                        app:tint="@color/colorAccent" />
+
+                </LinearLayout>-->
 
     </RelativeLayout>
 

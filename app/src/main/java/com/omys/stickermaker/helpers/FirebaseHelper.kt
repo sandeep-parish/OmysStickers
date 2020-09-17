@@ -4,34 +4,37 @@ import android.app.Activity
 import android.net.Uri
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
-import com.omys.stickermaker.modal.StickerPack
+import com.omys.stickermaker.modal.StickerPackInfoModal
 import com.omys.stickermaker.utils.*
+import java.io.File
 
 class FirebaseHelper(private val activity: Activity?) {
 
     var progressDialog: CustomDialogView? = null
-    var storageRef: StorageReference? = null
-    var firestore: FirebaseFirestore? = null
+    var circularProgress: CircularProgress? = null
+    private var firebaseStorage: FirebaseStorage? = null
+    private var firestore: FirebaseFirestore? = null
 
     init {
-        storageRef = Firebase.storage.reference
+        firebaseStorage = Firebase.storage
         firestore = FirebaseFirestore.getInstance()
         progressDialog = CustomDialogView(activity)
+        circularProgress = CircularProgress(activity)
     }
 
-    fun createNewStickerPack(stickerPack: StickerPack?, callback: OnSickerPackCallback? = null) {
-        stickerPack ?: return
+    fun createNewStickerPack(stickerPackInfoModal: StickerPackInfoModal?, callback: OnSickerPackCallback? = null) {
+        stickerPackInfoModal ?: return
         progressDialog?.show()
         val collectionReference = firestore?.collection(KEY_STICKER_PACK)
-        stickerPack.identifier = collectionReference?.document()?.id.toString()
+        stickerPackInfoModal.id = collectionReference?.document()?.id.toString()
 
-        collectionReference?.document(stickerPack.identifier.toString())
-                ?.set(stickerPack)?.addOnCompleteListener { it ->
+        collectionReference?.document(stickerPackInfoModal.id.toString())
+                ?.set(stickerPackInfoModal)?.addOnCompleteListener { it ->
                     progressDialog?.dismiss()
                     if (it.isComplete && it.isSuccessful) {
-                        callback?.onPackCreated(stickerPack)
+                        callback?.onPackCreated(stickerPackInfoModal)
                     } else {
                         callback?.onPackCreated(null)
                     }
@@ -43,7 +46,7 @@ class FirebaseHelper(private val activity: Activity?) {
         progressDialog?.show()
         val fileExtension = activity?.getFileExtensionFromUri(uri = fileUri)
         val fileName = "OMYS_IMG${System.currentTimeMillis()}$fileExtension"
-        val fileReference = storageRef?.child("$directoryName$fileName")
+        val fileReference = firebaseStorage?.reference?.child("$directoryName$fileName")
         val uploadTask = fileReference?.putFile(fileUri)
 
         uploadTask
@@ -61,6 +64,21 @@ class FirebaseHelper(private val activity: Activity?) {
                 }
     }
 
+    fun downloadFileFromFirebaseUrl(fileUrl: String?, directory: String?, type: String, callback: OnFileDownload?) {
+        fileUrl ?: return
+
+        val storageRef = firebaseStorage?.getReferenceFromUrl(fileUrl)
+        val outputFile = File(directory, storageRef?.name.toString())
+        if (outputFile.exists()) outputFile.delete()
+
+        storageRef?.getFile(outputFile)?.addOnSuccessListener {
+            callback?.onFileDownloaded(outputFile, type)
+            debugPrint("File downloaded at ${outputFile.absolutePath}")
+        }?.addOnFailureListener {
+            callback?.onFileDownloaded(null, type)
+        }
+    }
+
     fun updateStickerPackData(stickerPackId: String?, data: Map<String, Any>, onCallback: OnStickerPackUpdate? = null) {
         stickerPackId ?: return
         progressDialog?.show()
@@ -74,12 +92,16 @@ class FirebaseHelper(private val activity: Activity?) {
     }
 }
 
+interface OnFileDownload {
+    fun onFileDownloaded(file: File?, type: String)
+}
+
 interface OnStickerPackUpdate {
     fun onPackUpdated(isSuccessful: Boolean)
 }
 
 interface OnSickerPackCallback {
-    fun onPackCreated(stickerPack: StickerPack?)
+    fun onPackCreated(stickerPackInfoModal: StickerPackInfoModal?)
 }
 
 interface OnUploadCallback {

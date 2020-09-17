@@ -27,6 +27,8 @@
     <string name="stickerMaxLimit">Only 30 stickers allowed in a  sticker pack</string>
     <string name="publish">Publish</string>
     <string name="minStickerLimit">In order to be applied to WhatsApp, the sticker pack must have at least 3 stickers. Please add more stickers first.</string>
+    <string name="add">Add</string>
+    <string name="pleaseWait">Please Wait...</string>
 
     <!-- Admob data -->
     <!--

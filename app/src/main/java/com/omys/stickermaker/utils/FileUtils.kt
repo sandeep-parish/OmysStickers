@@ -122,9 +122,35 @@ fun Context.getFileExtensionFromUri(uri: Uri): String? {
     return ".$extension"
 }
 
+fun Context.getAppCacheDirectory(subDirectory: String? = ""): String {
+    val folder = "$filesDir/$APP_DIRECTORY$subDirectory"
+    val file = File(folder)
+    if (!file.exists()) {
+        file.mkdirs()
+    }
+    return folder
+}
+
+fun Context.getTrayImagesDirectory(identifier: String): String {
+    val folder = "$filesDir/$APP_DIRECTORY/$identifier/$TRAY_FILE_PATH"
+    val file = File(folder)
+    if (!file.exists()) {
+        file.mkdirs()
+    }
+    return folder
+}
+
+fun Context.getStickerFilesDirectory(identifier: String): String {
+    val folder = "$filesDir/$APP_DIRECTORY/$identifier/"
+    val file = File(folder)
+    if (!file.exists()) {
+        file.mkdirs()
+    }
+    return folder
+}
+
 fun String?.deleteOriginalFile() {
     if (this.isNullOrEmpty()) return
-
     val file = File(this)
     if (file.exists()) {
         file.delete()

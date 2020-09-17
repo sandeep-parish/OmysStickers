@@ -18,6 +18,7 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 
 import com.omys.stickermaker.BuildConfig;
+import com.omys.stickermaker.provider.StickerContentProvider;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class WhitelistCheck {

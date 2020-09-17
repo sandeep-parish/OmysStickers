@@ -5,7 +5,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -13,12 +13,13 @@
         android:allowBackup="false"
         android:icon="@drawable/app_logo"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@drawable/app_logo"
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
-        tools:node="replace">
+        tools:node="replace"
+        tools:targetApi="q">
         <activity android:name=".app.StickerPackDetailsActivity" />
-
         <activity android:name=".app.CreateNewStickerPackActivity" />
         <activity android:name=".app.AllStickersListActivity">
             <intent-filter>
@@ -67,11 +68,12 @@
             android:theme="@style/Theme.Intro" />
 
         <provider
-            android:name=".WhatsAppBasedCode.StickerContentProvider"
+            android:name=".provider.StickerContentProvider"
             android:authorities="${contentProviderAuthority}"
             android:enabled="true"
             android:exported="true"
             android:readPermission="com.whatsapp.sticker.READ" />
+
 
         <service android:name="com.google.firebase.components.ComponentDiscoveryService">
             <meta-data

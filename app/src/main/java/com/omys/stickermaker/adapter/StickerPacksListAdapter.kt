@@ -5,15 +5,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.omys.stickermaker.R
-import com.omys.stickermaker.modal.StickerPack
+import com.omys.stickermaker.app.startStickerPackDetailsActivity
+import com.omys.stickermaker.modal.StickerPackInfoModal
 import com.omys.stickermaker.utils.loadImage
 import kotlinx.android.synthetic.main.list_item_all_sticker_pack.view.*
 
 class StickerPacksListAdapter(private val onAction: OnStickerPackAction) : RecyclerView.Adapter<StickerPacksListAdapter.ReportItemViewHolder>() {
 
-    private val stickerPacksList = ArrayList<StickerPack>()
+    private val stickerPacksList = ArrayList<StickerPackInfoModal>()
 
-    fun setStickerPacks(dataList: List<StickerPack>) {
+    fun setStickerPacks(dataList: List<StickerPackInfoModal>) {
         stickerPacksList.clear()
         stickerPacksList.addAll(dataList)
         notifyDataSetChanged()
@@ -38,7 +39,7 @@ class StickerPacksListAdapter(private val onAction: OnStickerPackAction) : Recyc
     }
 
     inner class ReportItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindItem(dataBean: StickerPack) {
+        fun bindItem(dataBean: StickerPackInfoModal) {
             with(dataBean) {
                 itemView.sticker_pack_title?.text = name
                 itemView.sticker_pack_publisher.text = "by " + publisher + " - " + stickers.size + " Stickers"
@@ -50,13 +51,16 @@ class StickerPacksListAdapter(private val onAction: OnStickerPackAction) : Recyc
                     stickersAdapter.setStickerPacks(stickers)
                 }
 
-                itemView.setOnClickListener { onAction.onStickerPackClicked(this) }
+                itemView.btnAddStickerPack?.setOnClickListener { onAction.onStickerPackDownload(this) }
+                itemView.setOnClickListener {
+                    itemView.context.startStickerPackDetailsActivity(this)
+                }
             }
         }
     }
 
 
     interface OnStickerPackAction {
-        fun onStickerPackClicked(stickerPack: StickerPack)
+        fun onStickerPackDownload(stickerPackInfoModal: StickerPackInfoModal)
     }
 }

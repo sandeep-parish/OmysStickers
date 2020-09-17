@@ -15,18 +15,21 @@ const val KEY_STICKERS = "stickers"
 //file types
 const val FILE_IMAGE = "image/*"
 const val TRAY_IMAGE = "tray_image"
-
+const val STICKER = "sticker"
 
 //Request Codes
 const val FILE_PICKER_REQUEST_CODE = 1001
 const val ADD_STICKER_CODE = 1002
 
-
 //Static data
-const val PUBLISHER_EMAIL = ""
+const val PUBLISHER_EMAIL = "sk.parish01@gmail.com"
 const val PRIVACY_POLICY = ""
 const val PUBLISHER_WEBSITE = ""
 const val IMAGE_DATA_VERSION = "1"
+const val ANDROID_PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=com.viztushar.stickerpack"
+
+const val APP_DIRECTORY = "Omys Stickers/"
+const val TRAY_FILE_PATH = "TrayImages/"
 
 
 //Whatsapp Constants

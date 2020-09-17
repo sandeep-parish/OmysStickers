@@ -1,6 +1,6 @@
 package com.omys.stickermaker.app
 
-import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,13 +10,13 @@ import com.omys.stickermaker.adapter.StickersListAdapter
 import com.omys.stickermaker.helpers.FirebaseHelper
 import com.omys.stickermaker.helpers.OnStickerPackUpdate
 import com.omys.stickermaker.helpers.OnUploadCallback
-import com.omys.stickermaker.modal.StickerPack
+import com.omys.stickermaker.modal.StickerPackInfoModal
 import com.omys.stickermaker.utils.*
 import kotlinx.android.synthetic.main.activity_sticker_pack_details.*
 
-fun Activity.startStickerPackDetailsActivity(stickerPack: StickerPack?) {
+fun Context.startStickerPackDetailsActivity(stickerPackInfoModal: StickerPackInfoModal?) {
     val intent = Intent(this, StickerPackDetailsActivity::class.java)
-    intent.putExtra(ARGS1, stickerPack)
+    intent.putExtra(ARGS1, stickerPackInfoModal)
     startActivity(intent)
 }
 
@@ -27,16 +27,16 @@ class StickerPackDetailsActivity : AppCompatActivity(), OnUploadCallback, OnStic
 
     private var firebaseHelper: FirebaseHelper? = null
     private val stickersListAdapter by lazy { StickersListAdapter() }
-    private var stickerPack: StickerPack? = null
+    private var stickerPackInfoModal: StickerPackInfoModal? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sticker_pack_details)
 
         if (intent.extras?.containsKey(ARGS1) == true) {
-            stickerPack = intent?.extras?.getParcelable(ARGS1)
+            stickerPackInfoModal = intent?.extras?.getParcelable(ARGS1)
         }
-        if (stickerPack == null) {
+        if (stickerPackInfoModal == null) {
             showToast("Sticker pack is not valid")
             super.onBackPressed()
         }
@@ -48,13 +48,13 @@ class StickerPackDetailsActivity : AppCompatActivity(), OnUploadCallback, OnStic
         firebaseHelper = FirebaseHelper(this)
 
         stickersList?.adapter = stickersListAdapter
-        stickerTrayImage?.loadImage(stickerPack?.tray_image_file.toString())
-        stickerPackName?.text = stickerPack?.name.toString()
-        stickerAuthor?.text = stickerPack?.publisher.toString()
-        toolbar?.title = stickerPack?.name.toString()
+        stickerTrayImage?.loadImage(stickerPackInfoModal?.tray_image_file.toString())
+        stickerPackName?.text = stickerPackInfoModal?.name.toString()
+        stickerAuthor?.text = stickerPackInfoModal?.publisher.toString()
+        toolbar?.title = stickerPackInfoModal?.name.toString()
 
-        if (!stickerPack?.stickers.isNullOrEmpty()) {
-            stickersListAdapter.setStickerPacks(stickerPack?.stickers)
+        if (!stickerPackInfoModal?.stickers.isNullOrEmpty()) {
+            stickersListAdapter.setStickerPacks(stickerPackInfoModal?.stickers)
         }
         setOnClickListener()
     }
@@ -80,8 +80,8 @@ class StickerPackDetailsActivity : AppCompatActivity(), OnUploadCallback, OnStic
         }
 
         add_to_whatsapp_button?.setOnClickListener {
-            if (stickerPack?.stickers?.size!! >= 3) {
-                addStickerPackToWhatsApp(stickerPack)
+            if (stickerPackInfoModal?.stickers?.size!! >= 3) {
+                addStickerPackToWhatsApp(stickerPackInfoModal)
             }
         }
     }
@@ -116,14 +116,14 @@ class StickerPackDetailsActivity : AppCompatActivity(), OnUploadCallback, OnStic
             index++
             firebaseHelper?.uploadFile(Uri.parse(stickersListAdapter.stickers[index]), index.toString(), this)
         } else {
-            firebaseHelper?.updateStickerPackData(stickerPack?.identifier, mapOf(
+            firebaseHelper?.updateStickerPackData(stickerPackInfoModal?.id, mapOf(
                     KEY_STICKERS to stickersUrls
             ), this)
         }
     }
 
     override fun onPackUpdated(isSuccessful: Boolean) {
-        showToast("${stickersListAdapter.itemCount} Stickers successfully added to ${stickerPack?.name}")
+        showToast("${stickersListAdapter.itemCount} Stickers successfully added to ${stickerPackInfoModal?.name}")
     }
 
 }

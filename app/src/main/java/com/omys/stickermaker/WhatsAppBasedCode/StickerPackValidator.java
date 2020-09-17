@@ -18,7 +18,6 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import com.facebook.animated.webp.WebPImage;
-import com.omys.stickermaker.BuildConfig;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -150,6 +149,7 @@ public class StickerPackValidator {
     }
 
     private static Uri getStickerAssetUri(String identifier, String stickerName) {
-        return new Uri.Builder().scheme(StickerContentProvider.CONTENT_SCHEME).authority(BuildConfig.CONTENT_PROVIDER_AUTHORITY).appendPath(StickerContentProvider.STICKERS_ASSET).appendPath("2").appendPath(stickerName).build();
+        return null;
+        //  return new Uri.Builder().scheme(StickerContentProvider.CONTENT_SCHEME).authority(BuildConfig.CONTENT_PROVIDER_AUTHORITY).appendPath(StickerContentProvider.STICKERS_ASSET).appendPath("2").appendPath(stickerName).build();
     }
 }

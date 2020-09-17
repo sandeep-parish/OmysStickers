@@ -66,6 +66,14 @@ public class Sticker implements Parcelable {
         dest.writeLong(size);
     }
 
+    public List<String> getEmojis() {
+        return emojis;
+    }
+
+    public void setEmojis(List<String> emojis) {
+        this.emojis = emojis;
+    }
+
     public Uri getUri() {
         return uri;
     }
