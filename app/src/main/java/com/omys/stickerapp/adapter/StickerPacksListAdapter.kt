@@ -23,7 +23,8 @@ class StickerPacksListAdapter(private val context: Context, private val onAction
 
     val stickerPacksList = ArrayList<StickerPackInfoModal>()
 
-    fun setStickerPacks(dataList: List<StickerPackInfoModal>) {
+    fun setStickerPacks(dataList: List<StickerPackInfoModal>?) {
+        dataList ?: return
         stickerPacksList.clear()
         stickerPacksList.addAll(dataList)
         notifyDataSetChanged()
@@ -60,11 +61,15 @@ class StickerPacksListAdapter(private val context: Context, private val onAction
                     stickersAdapter.setStickerPacks(stickers)
                 }
 
-                if (stickerPacksDatabase?.getStickerPackById(id) != null || WhiteListHelper.isWhitelisted(context, id.toString())) {
+                if (stickerPacksDatabase?.getStickerPackById(id) != null || WhiteListHelper.isWhitelisted(context, id)) {
                     itemView.btnAddStickerPack.text = context.getString(R.string.share)
                 } else {
                     itemView.btnAddStickerPack.text = context.getString(R.string.add)
-                    itemView.btnAddStickerPack?.setOnClickListener { onAction.onStickerPackDownload(this) }
+
+                }
+                itemView.btnAddStickerPack?.setOnClickListener {
+                    onAction.onStickerPackAction(itemView.btnAddStickerPack.text.toString().trim(),
+                            this)
                 }
 
                 itemView.setOnClickListener {
@@ -80,6 +85,6 @@ class StickerPacksListAdapter(private val context: Context, private val onAction
 
 
     interface OnStickerPackAction {
-        fun onStickerPackDownload(stickerPackInfoModal: StickerPackInfoModal)
+        fun onStickerPackAction(actionType: String, stickerPackInfoModal: StickerPackInfoModal)
     }
 }

@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="com.omys.stickerapp.OmysApp"
+        android:name=".OmysApp"
         android:allowBackup="false"
         android:icon="@drawable/app_logo"
         android:label="@string/app_name"
@@ -19,39 +19,59 @@
         android:theme="@style/AppTheme"
         tools:node="replace"
         tools:targetApi="q">
-        <activity android:name="com.omys.stickerapp.app.StickerPackDetailsActivity" />
-        <activity android:name="com.omys.stickerapp.app.CreateNewStickerPackActivity" />
 
-        <activity android:name="com.omys.stickerapp.app.AllStickersListActivity">
+        <activity android:name=".app.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!--<intent-filter>
-                <action android:name="android.intent.action.SEND" />
-
-                <data android:mimeType="*/*" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>-->
         </activity>
+
+        <activity android:name=".app.ParseDeepLinkActivity">
+
+            <intent-filter android:autoVerify="true">
+                <category android:name="android.intent.category.BROWSABLE" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="omys-stickers"
+                    android:scheme="app" />
+                <data
+                    android:host="@string/appHost"
+                    android:scheme="https" />
+
+            </intent-filter>
+        </activity>
+        <activity android:name=".app.StickerPackDetailsActivity" />
+        <activity android:name=".app.CreateNewStickerPackActivity" />
+        <activity android:name=".app.AllStickersListActivity" />
+
+
+        <!--
+        <intent-filter>
+            <action android:name="android.intent.action.SEND" />
+
+            <data android:mimeType="*/*" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+        -->
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="com.omys.stickerapp.app.NewUserIntroActivity"
+            android:name=".app.NewUserIntroActivity"
             android:theme="@style/Theme.Intro" />
 
         <provider
-            android:name="com.omys.stickerapp.wahelper.StickerContentProvider"
+            android:name=".wahelper.StickerContentProvider"
             android:authorities="${contentProviderAuthority}"
             android:enabled="true"
             android:exported="true"
             android:readPermission="com.whatsapp.sticker.READ" />
-
 
         <service android:name="com.google.firebase.components.ComponentDiscoveryService">
             <meta-data
@@ -64,6 +84,25 @@
                 android:name="com.google.firebase.components:com.google.firebase.storage.StorageRegistrar"
                 android:value="com.google.firebase.components.ComponentRegistrar" />
         </service>
+
+        <service
+            android:name=".notification.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
+        <!--
+             Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
     </application>
 
 </manifest>

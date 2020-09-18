@@ -32,7 +32,12 @@
     <string name="share">Share</string>
     <string name="add_sticker">Add Sticker</string>
     <string name="save">Save</string>
-
+    <string name="default_notification_channel_id">Stickers</string>
+    <string name="default_notification_channel_name">New Stickers</string>
+    <string name="shareStickerPackUsing">Share %s sticker pack using</string>
+    <string name="stickerPackShareMessageBody">Hey, would you like to chat with stickers?\nI have found an amazing app for free and unlimited stickers and sharing %s stickers for you. Click on the link below to install the app for free\n\n👇🏻👇🏻👇🏻\n\n%s.\n\n Click below to add %s sticker pack\n\n👇🏻👇🏻👇🏻\n\n%s</string>
+    <string name="appHost">omys-stickers.firebaseio.com</string>
+    <string name="stickerLinkNotValid">This link is not valid or maybe this sticker pack is no longer available</string>
     <!-- Admob data -->
     <!--
     <string name="admob_ad_id"></string>

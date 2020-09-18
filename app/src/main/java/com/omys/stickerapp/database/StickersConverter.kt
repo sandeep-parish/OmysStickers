@@ -17,4 +17,17 @@ class StickersConverter {
         val type = object : TypeToken<ArrayList<Sticker>>() {}.type
         return Gson().fromJson(value, type)
     }
+
+    //FirebaseModal Convertor
+    @TypeConverter
+    fun firebaseListToJson(stickers: ArrayList<String>): String {
+        val type = object : TypeToken<ArrayList<Sticker>>() {}.type
+        return Gson().toJson(stickers, type)
+    }
+
+    @TypeConverter
+    fun toStickerListFromFirebaseJson(value: String): ArrayList<String> {
+        val type = object : TypeToken<ArrayList<String>>() {}.type
+        return Gson().fromJson(value, type)
+    }
 }

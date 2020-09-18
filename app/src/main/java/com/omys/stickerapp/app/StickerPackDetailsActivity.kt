@@ -56,6 +56,10 @@ class StickerPackDetailsActivity : AppCompatActivity(), OnUploadCallback, OnStic
         firebaseHelper = FirebaseHelper(this)
         stickerPacks = OmysDatabase.getDatabase(this).stickerPacksDatabase()
 
+        if (stickerPacks?.getOfflineStickerPackById(stickerPackInfoModal?.id) == null) {
+            stickerPacks?.addNewStickerPackLocally(stickerPackInfoModal)
+        }
+
         stickersList?.adapter = stickersListAdapter
         stickerTrayImage?.loadImage(stickerPackInfoModal?.tray_image_file.toString())
         stickerPackName?.text = stickerPackInfoModal?.name.toString()
@@ -155,7 +159,8 @@ class StickerPackDetailsActivity : AppCompatActivity(), OnUploadCallback, OnStic
         } else {
             firebaseHelper?.updateStickerPackData(stickerPackInfoModal?.id, mapOf(
                     KEY_STICKERS to stickersUrls,
-                    KEY_TOTAL_STICKERS to stickersUrls.size
+                    KEY_TOTAL_STICKERS to stickersUrls.size,
+                    KEY_CREATED_AT to System.currentTimeMillis()
             ), this)
         }
     }

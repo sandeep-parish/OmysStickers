@@ -4,10 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.omys.stickerapp.modal.StickerPackInfoModal
 import com.omys.stickerapp.modal.StickerPackModal
 
 @Database(entities =
-[StickerPackModal::class], version = 1)
+[StickerPackModal::class, StickerPackInfoModal::class], version = 1)
 abstract class OmysDatabase : RoomDatabase() {
 
     abstract fun stickerPacksDatabase(): StickerPacksDao

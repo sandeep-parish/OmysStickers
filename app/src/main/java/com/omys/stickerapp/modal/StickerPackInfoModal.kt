@@ -2,21 +2,31 @@ package com.omys.stickerapp.modal
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.omys.stickerapp.database.StickersConverter
 
 /**Created By SandeepParish
  *  on 16/09/2020
  * */
+
+@Entity(tableName = "firebaseStickerPacks")
 class StickerPackInfoModal() : Parcelable {
-    var id: String? = null
+    @PrimaryKey
+    var id: String = ""
+
+    @TypeConverters(StickersConverter::class)
+    var stickers = ArrayList<String>()
+
     var name: String? = null
     var publisher: String? = null
-    var stickers = ArrayList<String>()
     var tray_image_file: String? = null
     var createdAt: Long = 0
     var totalStickers: Int = 0
 
     constructor(parcel: Parcel) : this() {
-        id = parcel.readString()
+        id = parcel.readString().toString()
         name = parcel.readString()
         publisher = parcel.readString()
         tray_image_file = parcel.readString()
@@ -48,5 +58,4 @@ class StickerPackInfoModal() : Parcelable {
             return arrayOfNulls(size)
         }
     }
-
 }

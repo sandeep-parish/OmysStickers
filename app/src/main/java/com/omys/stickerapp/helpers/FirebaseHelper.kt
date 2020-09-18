@@ -24,10 +24,28 @@ class FirebaseHelper(private val activity: Activity?) {
         circularProgress = CircularProgress(activity)
     }
 
+    fun getStickerPackDetails(documentId: String?, showLoading: Boolean = true, callback: OnStickerPackInfo? = null) {
+        if (documentId.isNullOrEmpty()) return
+        if (showLoading) {
+            progressDialog?.show()
+        }
+        val collection = firestore?.collection(STICKER_PACKS_COLLECTION)
+        collection?.document(documentId.toString())?.get()
+                ?.addOnCompleteListener { it ->
+                    progressDialog?.dismiss()
+                    if (it.isComplete && it.isSuccessful) {
+                        val stickerInfoModal = it.result.toObject(StickerPackInfoModal::class.java)
+                        callback?.onStickerPackDetails(stickerInfoModal)
+                    } else {
+                        callback?.onStickerPackDetails(null)
+                    }
+                }
+    }
+
     fun createNewStickerPack(stickerPackInfoModal: StickerPackInfoModal?, callback: OnSickerPackCallback? = null) {
         stickerPackInfoModal ?: return
         progressDialog?.show()
-        val collectionReference = firestore?.collection(KEY_STICKER_PACK)
+        val collectionReference = firestore?.collection(STICKER_PACKS_COLLECTION)
         stickerPackInfoModal.id = collectionReference?.document()?.id.toString()
 
         collectionReference?.document(stickerPackInfoModal.id.toString())
@@ -82,7 +100,7 @@ class FirebaseHelper(private val activity: Activity?) {
     fun updateStickerPackData(stickerPackId: String?, data: Map<String, Any>, onCallback: OnStickerPackUpdate? = null) {
         stickerPackId ?: return
         progressDialog?.show()
-        val query = firestore?.collection(KEY_STICKER_PACK)?.document(stickerPackId.toString())
+        val query = firestore?.collection(STICKER_PACKS_COLLECTION)?.document(stickerPackId.toString())
         query?.update(data)
                 ?.addOnCompleteListener {
                     progressDialog?.dismiss()
@@ -106,4 +124,8 @@ interface OnSickerPackCallback {
 
 interface OnUploadCallback {
     fun onUploadComplete(identifier: String, fileUrl: String)
+}
+
+interface OnStickerPackInfo {
+    fun onStickerPackDetails(stickerPack: StickerPackInfoModal?)
 }

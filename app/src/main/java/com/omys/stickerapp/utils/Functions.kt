@@ -1,10 +1,13 @@
 package com.omys.stickerapp.utils
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.Window
@@ -18,10 +21,17 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.omys.stickerapp.BuildConfig
 import com.omys.stickerapp.R
+import java.util.*
 
 fun debugPrint(message: String?) {
     if (BuildConfig.DEBUG) {
         Log.e("Print", message.toString())
+    }
+}
+
+fun Context.debugToast(message: String?) {
+    if (BuildConfig.DEBUG) {
+        showToast(message.toString())
     }
 }
 
@@ -37,6 +47,18 @@ fun ImageView.loadImage(imageUrl: String, placeholder: Int = R.drawable.ic_image
                     .placeholder(placeholder)
                     .error(placeholder))
             .into(this)
+}
+
+
+fun Context.showTimedLoading() {
+    val millies = arrayListOf<Long>(1000, 1500, 2000, 2500)
+    val loadingTime = millies[Random().nextInt(millies.size)]
+    val progress = CustomDialogView(this)
+    progress.show()
+    Handler(Looper.getMainLooper()).postDelayed({
+        progress.dismiss()
+    }, loadingTime)
+    debugPrint("Loading time $loadingTime")
 }
 
 
@@ -87,4 +109,38 @@ fun Activity.addStickerPackToWhatsApp(identifier: String?, packName: String?) {
     } catch (e: ActivityNotFoundException) {
         Toast.makeText(this, R.string.error_adding_sticker_pack, Toast.LENGTH_LONG).show()
     }
+}
+
+fun Context.shareStickerPack(identifier: String?, packName: String?) {
+    val stickerPackLink = "${getString(R.string.firebase_database_url)}?$TYPE_TAG=$TYPE_STICKER_PACK&$KEY_ID=$identifier"
+    val shareMessageBody = getString(R.string.stickerPackShareMessageBody).format(packName, ANDROID_PLAY_STORE_LINK, packName,
+            stickerPackLink)
+    val intent = Intent(Intent.ACTION_SEND)
+    intent.type = "text/plain"
+    intent.putExtra(Intent.EXTRA_TEXT, shareMessageBody)
+    startActivity(Intent.createChooser(intent, getString(R.string.shareStickerPackUsing).format(packName)))
+}
+
+fun isAppIsInBackground(context: Context): Boolean {
+    var isInBackground = true
+    val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
+        val runningProcesses = am.runningAppProcesses
+        for (processInfo in runningProcesses) {
+            if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                for (activeProcess in processInfo.pkgList) {
+                    if (activeProcess == context.packageName) {
+                        isInBackground = false
+                    }
+                }
+            }
+        }
+    } else {
+        val taskInfo = am.getRunningTasks(1)
+        val componentInfo = taskInfo[0].topActivity
+        if (componentInfo?.packageName == context.packageName) {
+            isInBackground = false
+        }
+    }
+    return isInBackground
 }
