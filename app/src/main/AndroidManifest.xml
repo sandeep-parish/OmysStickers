@@ -38,8 +38,11 @@
                     android:host="omys-stickers"
                     android:scheme="app" />
                 <data
-                    android:host="@string/appHost"
+                    android:host="@string/appDomain"
                     android:scheme="https" />
+                <data
+                    android:host="@string/appDomain"
+                    android:scheme="http" />
 
             </intent-filter>
         </activity>

@@ -35,11 +35,12 @@
     <string name="default_notification_channel_id">Stickers</string>
     <string name="default_notification_channel_name">New Stickers</string>
     <string name="shareStickerPackUsing">Share %s sticker pack using</string>
-    <string name="stickerPackShareMessageBody">Hey, would you like to chat with stickers?\nI have found amazing sticker pack %s you. Click on the link below to start using this sticker pack\n\n👇🏻👇🏻👇🏻\n\n%s.\n\n Click below link to download the OMYS Sticker app\n\n👇🏻👇🏻👇🏻\n\n%s</string>
-    <string name="appHost">omys-stickers.com</string>
-    <string name="appDomain">https://omys-stickers.com</string>
-    <string name="stickerLinkNotValid">This link is not valid or maybe this sticker pack is no longer available</string>
+    <string name="stickerPackShareMessageBody">Hey, would you like to chat with stickers?\nI have found amazing sticker pack %s you. Click on the link below to start using this sticker pack\n\n👇🏻👇🏻👇🏻\n\n%s.\n\nClick below link to download the OMYS Sticker app\n\n👇🏻👇🏻👇🏻\n\n%s</string>
+    <string name="stickerLinkNotValid">This link is not valid or this sticker pack is no longer available</string>
     <string name="shareWithFriends">Share with friends</string>
+    <string name="deepLinkUri">http://mzoneinventers.epizy.com/omys/deeplink.php?</string>
+    <string name="appDomain">mzoneinventers.epizy.com</string>
+
     <!-- Admob data -->
     <!--
     <string name="admob_ad_id"></string>
