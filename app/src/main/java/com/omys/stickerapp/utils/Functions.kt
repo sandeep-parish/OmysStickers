@@ -71,12 +71,14 @@ fun View.avoidDoubleClicks() {
     this.postDelayed({ this.isClickable = true }, DELAY_IN_MS)
 }
 
-fun View.hide() {
+fun View?.hide() {
+    this?:return
     animate().alpha(0.0f)?.duration = 500
     visibility = View.GONE
 }
 
-fun View.visible(opacity: Float = 1.0f) {
+fun View?.visible(opacity: Float = 1.0f) {
+    this?:return
     animate().alpha(opacity).duration = 500
     visibility = View.VISIBLE
 }

@@ -142,9 +142,8 @@ class StickerPackDetailsActivity : AppCompatActivity(), OnUploadCallback, OnStic
             }
             ADD_STICKER_PACK_CODE -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    showToast("Sticker pack added successfully")
-                    viewAlreadyAdded.visible()
-                    btnAddToWhatsApp.hide()
+                    viewAlreadyAdded?.visible()
+                    btnAddToWhatsApp?.hide()
                 } else {
                     val validationError = data?.getStringExtra("validation_error")
                     debugPrint(validationError.toString())

@@ -18,7 +18,6 @@ import com.omys.stickerapp.modal.StickerPackInfoModal
 import com.omys.stickerapp.modal.StickerPackModal
 import com.omys.stickerapp.utils.*
 import kotlinx.android.synthetic.main.activity_all_stickers_list.*
-import kotlinx.android.synthetic.main.activity_sticker_pack_details.*
 
 
 fun Context.startAllStickersActivity(topActivity: Boolean = false) {
@@ -109,11 +108,7 @@ class AllStickersListActivity : AppCompatActivity(), StickerPacksListAdapter.OnS
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             ADD_STICKER_PACK_CODE -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    showToast("Sticker pack added successfully")
-                    viewAlreadyAdded.visible()
-                    btnAddToWhatsApp.hide()
-                } else {
+                if (resultCode != Activity.RESULT_OK) {
                     val validationError = data?.getStringExtra("validation_error")
                     debugPrint(validationError.toString())
                 }
