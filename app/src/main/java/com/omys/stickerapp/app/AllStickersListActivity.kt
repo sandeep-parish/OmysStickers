@@ -70,7 +70,6 @@ class AllStickersListActivity : AppCompatActivity(), StickerPacksListAdapter.OnS
         if (lastUpdatedInterval >= REFRESH_INTERVAL) {
             getAllAvailableStickers()
         } else {
-            debugToast("Showing fake Loading")
             showTimedLoading()
         }
     }
