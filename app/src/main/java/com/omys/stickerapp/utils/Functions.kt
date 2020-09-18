@@ -112,9 +112,9 @@ fun Activity.addStickerPackToWhatsApp(identifier: String?, packName: String?) {
 }
 
 fun Context.shareStickerPack(identifier: String?, packName: String?) {
-    val stickerPackLink = "${getString(R.string.firebase_database_url)}?$TYPE_TAG=$TYPE_STICKER_PACK&$KEY_ID=$identifier"
-    val shareMessageBody = getString(R.string.stickerPackShareMessageBody).format(packName, ANDROID_PLAY_STORE_LINK, packName,
-            stickerPackLink)
+    val stickerPackLink = "${getString(R.string.appDomain)}?$TYPE_TAG=$TYPE_STICKER_PACK&$KEY_ID=$identifier"
+    val shareMessageBody = getString(R.string.stickerPackShareMessageBody).format(packName,
+            stickerPackLink, ANDROID_PLAY_STORE_LINK)
     val intent = Intent(Intent.ACTION_SEND)
     intent.type = "text/plain"
     intent.putExtra(Intent.EXTRA_TEXT, shareMessageBody)

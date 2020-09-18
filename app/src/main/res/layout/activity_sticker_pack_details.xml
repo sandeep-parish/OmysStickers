@@ -101,13 +101,26 @@
         android:id="@+id/stickersList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomContainer"
+        android:layout_above="@+id/btnShareStickerPack"
         android:layout_below="@+id/viewDivider"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_5sdp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="3" />
 
+    <TextView
+        android:id="@+id/btnShareStickerPack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomContainer"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:background="@drawable/rounded_border_bg"
+        android:fontFamily="@font/roboto_regular"
+        android:gravity="center"
+        android:paddingVertical="@dimen/_8sdp"
+        android:text="@string/shareWithFriends"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/_13ssp" />
 
     <FrameLayout
         android:id="@+id/bottomContainer"
@@ -115,7 +128,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginHorizontal="@dimen/_10sdp"
-        android:layout_marginBottom="@dimen/_10sdp">
+        android:layout_marginVertical="@dimen/_10sdp">
 
         <TextView
             android:id="@+id/btnAddToWhatsApp"

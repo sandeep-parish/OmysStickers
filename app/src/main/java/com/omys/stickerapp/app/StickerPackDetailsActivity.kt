@@ -102,6 +102,9 @@ class StickerPackDetailsActivity : AppCompatActivity(), OnUploadCallback, OnStic
             }
         }
 
+        btnShareStickerPack?.setOnClickListener {
+            shareStickerPack(stickerPackInfoModal?.id.toString(), stickerPackInfoModal?.name.toString())
+        }
         btnAddToWhatsApp?.setOnClickListener {
             when {
                 stickersListAdapter.itemCount < 3 -> {
