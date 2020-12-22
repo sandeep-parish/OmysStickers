@@ -1,4 +1,4 @@
-# StickerMaker for WhatsApp
+# StickerMaker for WhatsApp With firebase database
 
 [![Get it in the Play Store](https://play-lh.googleusercontent.com/YaSdjpcg5NaPe7wYF57h3hS6U42JLj2rZbpvKLawu3mJQ4OWKty4O7hCJJgmZ50aqj4=w720-h310-rw)](https://play.google.com/store/apps/details?id=com.omys.stickerapp)
 
@@ -31,12 +31,15 @@ You can [download the app directly from the Play Store](https://play.google.com/
 
 **Supports all Android devices, all the way back to KitKat 4.4!**
 
+## Database
+  **Room database and Firebase database and firebase storage
+  
+## Language
+ **Kotlin,Java
 
 ## Screenshots
 
 Tested on OnePlus 3T, 2018.
-
-<img src="https://play-lh.googleusercontent.com/XV8Bo_71E-eiMv640Gl4IL2j12G_mR0BQfPv71lYNX5jRpgIMN4IFUIzTsNMupyuvA=w720-h310-rw" width="328" height="271">
 
 <img src="https://play-lh.googleusercontent.com/YaSdjpcg5NaPe7wYF57h3hS6U42JLj2rZbpvKLawu3mJQ4OWKty4O7hCJJgmZ50aqj4=w720-h310-rw" width="270" height="480">
 
